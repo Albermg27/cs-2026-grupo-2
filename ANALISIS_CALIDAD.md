@@ -58,5 +58,22 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
    * Problema: El uso de nombres crípticos reduce la legibilidad del código y dificulta su comprensión, especialmente para otros desarrolladores o incluso para el propio autor cuando vuelva a revisar el código en el futuro. Esto obliga a analizar el contexto del método para entender qué representan las variables, lo que aumenta el tiempo necesario para mantener o modificar el código.
 
    * Cómo solucionarlo: Este problema se puede solucionar utilizando nombres de variables más descriptivos que reflejen claramente su función dentro del método. Por ejemplo, sustituir m por sourceAccount o fromAccount, y o por destinationAccount o toAccount. De esta forma, la intención del código se entiende de manera inmediata y se mejora la claridad y mantenibilidad del sistema.
+ 
+### Bad Smell 3: [Large Class (Clase Grande)]
+* **Ubicación:** `AccountService.java` - Toda la clase `AccountService` Líneas `1-326`
+* **Reporte de la issue:**  
+
+* **Explicación del bad smell:**
+   * **Descripción:** La clase `AccountService` concentra demasiadas responsabilidades dentro de una única clase. Entre sus funciones se encuentran la creación de cuentas, la gestión de depósitos y transferencias, el registro de transacciones, la lógica de generación de números de cuenta y la gestión de notificaciones a los usuarios.
+
+   * **Problema:** Este diseño viola el **Principio de Responsabilidad Única (Single Responsibility Principle, SRP)**, que establece que una clase debería tener una única razón para cambiar. Al encargarse de múltiples tareas diferentes, la clase se vuelve más difícil de entender, mantener y probar. Además, cualquier modificación en una de estas funcionalidades puede afectar a otras partes del sistema de forma inesperada.
+
+   * **Cómo solucionarlo:**  
+   Este problema se puede solucionar dividiendo la clase en varios servicios más especializados, cada uno encargado de una responsabilidad concreta. Por ejemplo:
+   - Un `AccountService` encargado únicamente de la gestión de cuentas.
+   - Un `TransactionService` para manejar depósitos, retiradas y transferencias.
+   - Un `NotificationService` para gestionar el envío de notificaciones (email o SMS).
+   
+   De esta forma se mejora la modularidad del sistema, se facilita el mantenimiento del código y se respeta el principio de responsabilidad única.
      
 ---
