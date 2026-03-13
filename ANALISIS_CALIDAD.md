@@ -51,7 +51,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 ### Bad Semll 2: [Mysterious Names / Non-Descriptive Names (Nombres poco claros)]
 * **Ubicación:** `AccountService.java` - Método `transfer(String fromAccountNumber, String toAccountNumber, double amount)` Líneas `231-232`
 * **Reporte de la issue:**
-  
+  ![Overview SonarQube](img/MisteriousNames.png)
 * **Explicación del bad smell:**
     * Descripción: En el método transfer se utilizan variables con nombres muy cortos y poco descriptivos (m y o). Estos nombres no reflejan claramente qué representan dentro de la lógica del método.
 
@@ -61,8 +61,8 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
  
 ### Bad Smell 3: [Large Class (Clase Grande)]
 * **Ubicación:** `AccountService.java` - Toda la clase `AccountService` Líneas `1-326`
-* **Reporte de la issue:**  
-
+* **Reporte de la issue:**
+  ![Overview SonarQube](img/LargeClass.png)
 * **Explicación del bad smell:**
    * **Descripción:** La clase `AccountService` concentra demasiadas responsabilidades dentro de una única clase. Entre sus funciones se encuentran la creación de cuentas, la gestión de depósitos y transferencias, el registro de transacciones, la lógica de generación de números de cuenta y la gestión de notificaciones a los usuarios.
 
