@@ -35,23 +35,28 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 
     * Si fue detectado por SonarCloud, **¿Problema real o Falso positivo?**
 
-### Bad Smell 1: [Nombre de la issue, p.e. Duplicación de código en X método]
+### Bad Smell 1: Duplicación de código en métodos deposit
 * **Ubicación:** `AccountService.java` - Métodos `deposit(String, double, String) y deposit(String, double)`
 * **Reporte de la issue:**
-     <img width="3312" height="471" alt="image" src="https://github.com/user-attachments/assets/c2bd40f6-a42b-4b35-a050-afc8fed03d77" />
-     <img width="2888" height="540" alt="image" src="https://github.com/user-attachments/assets/6c62166b-64a7-49cb-958d-8bb09a1dc7aa" />
+
+    ![Codigo Duplicado 1](img/cod-duplicado1.png)
+
+    ![Codigo Duplicado 2](img/cod-duplicado2.png)
 
 
 * **Explicación del bad smell:**
    * Descripción: Ambos métodos repiten exactamente la misma lógica de validación (cuatro bloques if para la  cantidad) y la misma lógica para registrar el depósito y enviar notificaciones.
+
    * Problema: Si las reglas de negocio para los depósitos cambian (por ejemplo, el límite máximo), hay que modificarlo en varios lugares, lo que aumenta el riesgo de inconsistencias y errores.
 
+   * Como solucionarlo: El problema se podría solucionar unificando ambos métodos en uno solo, ya que el único cambio en el código es que como descripción del depósito se usa "Quick deposit" de forma predeterminada en el método que no recibe descripción.
 
 
-### Bad Semll 2: [Mysterious Names / Non-Descriptive Names (Nombres poco claros)]
+
+### Bad Semll 2: Mysterious Names / Non-Descriptive Names (Nombres poco claros)
 * **Ubicación:** `AccountService.java` - Método `transfer(String fromAccountNumber, String toAccountNumber, double amount)` Líneas `231-232`
 * **Reporte de la issue:**
-  ![Overview SonarQube](img/MisteriousNames.png)
+  ![Mysterious Names](img/MysteriousNames.png)
 * **Explicación del bad smell:**
     * Descripción: En el método transfer se utilizan variables con nombres muy cortos y poco descriptivos (m y o). Estos nombres no reflejan claramente qué representan dentro de la lógica del método.
 
@@ -59,10 +64,10 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 
    * Cómo solucionarlo: Este problema se puede solucionar utilizando nombres de variables más descriptivos que reflejen claramente su función dentro del método. Por ejemplo, sustituir m por sourceAccount o fromAccount, y o por destinationAccount o toAccount. De esta forma, la intención del código se entiende de manera inmediata y se mejora la claridad y mantenibilidad del sistema.
  
-### Bad Smell 3: [Large Class (Clase Grande)]
+### Bad Smell 3: Large Class (Clase Grande)
 * **Ubicación:** `AccountService.java` - Toda la clase `AccountService` Líneas `1-326`
 * **Reporte de la issue:**
-  ![Overview SonarQube](img/LargeClass.png)
+  ![Large Class](img/LargeClass.png)
 * **Explicación del bad smell:**
    * **Descripción:** La clase `AccountService` concentra demasiadas responsabilidades dentro de una única clase. Entre sus funciones se encuentran la creación de cuentas, la gestión de depósitos y transferencias, el registro de transacciones, la lógica de generación de números de cuenta y la gestión de notificaciones a los usuarios.
 
@@ -76,4 +81,33 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
    
    De esta forma se mejora la modularidad del sistema, se facilita el mantenimiento del código y se respeta el principio de responsabilidad única.
      
+### Bad Smell 4: Método demasiado largo (transfer)
+* **Ubicación:** `AccountService.java` - Método `transfer(String, String, double)`
+* **Reporte de la issue:**
+
+    ![Codigo Duplicado 1](img/long-method.png)
+
+
+* **Explicación del bad smell:**
+  * Descripción: El método realiza múltiples tareas: valida cantidades, busca cuentas, verifica saldo, realiza dos operaciones financieras, crea dos registros de transacciones y envía dos notificaciones distintas.
+  
+  * Problema: Un método que hace demasiado obliga al lector a mantener demasiado contexto en memoria y dificulta las pruebas unitarias aisladas de cada paso.
+
+  * Como solucionarlo: El problema se podría solucionar fragmentando la lógica de este método en métodos más pequeños que se encarguen de realizar una única tarea cada uno, en vez de tener todo el código concentrado en un único método.
+
+### Bad Smell 5: Literales duplicados
+* **Ubicación:** `AccountService.java` - Líneas `107`, `114`, `156` y `163`.
+* **Reporte de la issue:**
+
+    ![Strings Duplicados 1](img/duplicate-literals.png)
+
+    ![Strings Duplicados 2](img/duplicate-literals2.png)
+
+* **Explicación del bad smell:**
+  * Descripción: Encontramos cuatro Strings literales idénticos hardcodeados en la clase. 
+  
+  * Problema: En caso de querer cambiar el String, el proceso de refactor podría generar inconsistencias si no se modifica el String en todos los lugares.
+
+  * Como solucionarlo: El problema se solucionaría creando una constante `DEPOSIT_CONFIRMATION` cuyo valor sea el String, y usándola en todos los lugares donde se necesita ese String. De esta manera al cambiar el valor de la constante se refleja en todos los demás lugares y se mantiene consistente.
+
 ---
