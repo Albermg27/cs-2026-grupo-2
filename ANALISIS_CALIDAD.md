@@ -151,4 +151,27 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Problema:** Es una violación del polimorfismo, el servicio asume la responsabilidad de cómo notificar basándose en el tipo de usuario.
     * **Cómo solucionarlo:** Eliminar la responsabilidad de decidir cómo enviar del AccountService y delegarla a los propios servicios de notificación mediante una interfaz común.
   
----
+### Bad Smell 8: Primitive Obsession (Obsesión por los Primitivos) - NAROA
+* **Ubicación:** `AccountService.java` - Uso general de `double amount` y `String accountNumber`.
+* **Reporte de la issue:**
+
+    ![Primitive Obsession - Validación en Deposit](img/Primitive Obsession-1.png)
+    ![Primitive Obsession - Validación en Withdraw](img/Primitive Obsession-2.png)
+    ![Primitive Obsession - Firma del método Transfer](img/Primitive Obsession-3.png)
+
+* **Explicación del bad smell:**
+    * **Descripción:** Se utilizan tipos primitivos (double, String) para representar conceptos de dominio complejos como montos de dinero y números de cuenta bancaria. Específicamente, el uso de double para transacciones financieras es un error de calidad crítico, ya que los tipos de punto flotante no garantizan la precisión decimal necesaria en banca, pudiendo generar errores de redondeo acumulativos (por ejemplo, en el cálculo de intereses o saldos). Asimismo, el número de cuenta se trata como una simple cadena de texto, perdiendo su identidad como entidad con reglas propias.
+    * **Problema:** Se pierden oportunidades para encapsular lógica de validación y formateo. Como se observa en las tres capturas, la validación para asegurar que un monto sea positivo se repite manualmente en `deposit` y `withdraw`, y el formato de la cuenta no está garantizado en `transfer`. Esto deja la lógica de validación dispersa por todo el servicio, aumentando el riesgo de inconsistencias.
+    * **Cómo solucionarlo:** Crear *Value Objects* como una clase o record `Money` y `AccountNumber`. De esta forma, la validación ocurre una sola vez en el constructor del objeto y el servicio recibe datos cuya integridad ya está garantizada por el tipo.
+
+### Bad Smell 9: Feature Envy (Envidia de Funciones) - NAROA
+* **Ubicación:** `AccountService.java` - Métodos `withdraw` y `transfer`.
+* **Reporte de la issue:**
+
+    ![Feature Envy - Lógica de saldo en Withdraw](img/Feature Envy-1.png)
+    ![Feature Envy - Lógica de saldo en Transfer](img/Feature Envy-2.png)
+
+* **Explicación del bad smell:**
+    * **Descripción:** El servicio `AccountService` accede al saldo de la cuenta mediante `account.getBalance()` para realizar una validación lógica (`< amount`) y decidir si lanza una excepción de "Fondos insuficientes".
+    * **Problema:** El servicio está asumiendo una responsabilidad que debería ser de la entidad `Account`. La lógica de determinar si una cuenta es capaz de afrontar un cargo según su estado interno es lógica de negocio pura. Al realizarla en el servicio, este demuestra "envidia" por el comportamiento que debería estar encapsulado en la clase de dominio, obligando al servicio a conocer innecesariamente las reglas de gestión de saldo.
+    * **Cómo solucionarlo:** Aplicar el principio **"Tell, Don't Ask"** (Dile, no preguntes). Se debe mover la lógica de validación a la clase `Account`. El servicio simplemente debe invocar el método de retirada en la entidad, y que sea la propia cuenta la que valide su capacidad de pago y lance la excepción si no puede cumplir la operación.
