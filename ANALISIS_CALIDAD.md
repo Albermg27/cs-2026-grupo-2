@@ -175,3 +175,17 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Descripción:** El servicio `AccountService` accede al saldo de la cuenta mediante `account.getBalance()` para realizar una validación lógica (`< amount`) y decidir si lanza una excepción de "Fondos insuficientes".
     * **Problema:** El servicio está asumiendo una responsabilidad que debería ser de la entidad `Account`. La lógica de determinar si una cuenta es capaz de afrontar un cargo según su estado interno es lógica de negocio pura. Al realizarla en el servicio, este demuestra "envidia" por el comportamiento que debería estar encapsulado en la clase de dominio, obligando al servicio a conocer innecesariamente las reglas de gestión de saldo.
     * **Cómo solucionarlo:** Aplicar el principio **"Tell, Don't Ask"** (Dile, no preguntes). Se debe mover la lógica de validación a la clase `Account`. El servicio simplemente debe invocar el método de retirada en la entidad, y que sea la propia cuenta la que valide su capacidad de pago y lance la excepción si no puede cumplir la operación.
+ 
+
+### Bad Smell 10: Inappropriate Intimacy (Intimidad Inapropiada)
+* **Ubicación:** `AccountService.java` - Método `transfer` - Línea 235
+
+* **Reporte de la issue:**
+  
+<img width="600" height="363" alt="image" src="https://github.com/user-attachments/assets/3a4b93ae-10cd-456d-ae1c-07a30e360d83" />
+
+* **Explicación del mal olor:**
+
+    * **Descripción:** Para evitar transferencias a la misma cuenta, el servicio obtiene los números de cuenta de ambos objetos (m y o) y los compara directamente: if (m.getAccountNumber() == o.getAccountNumber()).
+    * **Problema:** Violación del encapsulamiento, el servicio demuestra un conocimiento excesivo sobre la estructura interna de la entidad Account. En general no se deben pedir datos a un objeto para tomar decisiones por él, sino pedirle al objeto que tome la decisión.
+    * **Cómo solucionarlo:** En lugar de pedirle datos a los objetos para compararlos fuera, le pides al objeto que realice la comparación internamente. En la clase Account se debería implementar un método equals() adecuado o un método de conveniencia como isSameAccountAs(Account other) y en el AccountService habría que sustituir la comparación de atributos por una llamada al método del objeto.
