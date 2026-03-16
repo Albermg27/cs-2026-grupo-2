@@ -70,6 +70,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Cómo solucionarlo:** Usar el método `.equals()`.
 
 
+
 ## 3.2 Bad Smells detectados manualmente
 
 ### Bad Smell 1: Duplicación de código en métodos deposit
