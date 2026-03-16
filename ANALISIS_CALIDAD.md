@@ -28,6 +28,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 ### Bad Smell 1: Literales duplicados
 * **Ubicación:** `AccountService.java` - Líneas `107`, `114`, `156` y `163`.
 * **Reporte de la issue:**
+    > **Análisis:** ¿Problema real o Falso positivo? **Problema real.** El String "Deposit Confirmation" se repite textualmente en cuatro puntos diferentes.
 
     ![Captura SonarCloud](img/duplicate-literals-sonarcloud.png)
 
@@ -41,6 +42,32 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
   * Problema: En caso de querer cambiar el String, el proceso de refactor podría generar inconsistencias si no se modifica el String en todos los lugares.
 
   * Como solucionarlo: El problema se solucionaría creando una constante `DEPOSIT_CONFIRMATION` cuyo valor sea el String, y usándola en todos los lugares donde se necesita ese String. De esta manera al cambiar el valor de la constante se refleja en todos los demás lugares y se mantiene consistente.
+
+### Bad Smell 2: Variable local no utilizada (`seccondAccount`)
+* **Ubicación:** `AccountService.java` - Línea `185`
+* **Reporte de la issue:**
+    > **Análisis:** ¿Problema real o Falso positivo? **Problema real.** La variable se declara pero no tiene ningún uso en el flujo del método.
+    
+    ![Captura SonarCloud Issue Unused](img/Unused-Local-Variable-Sonarcloud.png)
+    ![Código variable no usada](img/Unused-Local-Variable.png)
+
+* **Explicación del bad smell:**
+    * **Descripción:** En el método `withdraw`, se declara `Account seccondAccount;` (incluso con una errata en el nombre) que no se utiliza.
+    * **Problema:** "Código muerto" que genera ruido visual y confusión sobre la intención del programador.
+    * **Cómo solucionarlo:** Eliminar la línea 185.
+
+### Bad Smell 3: Comparación de Strings con operador de identidad (`==`)
+* **Ubicación:** `AccountService.java` - Línea `235`
+* **Reporte de la issue:**
+    > **Análisis:** ¿Problema real o Falso positivo? **Problema real.** Se comparan números de cuenta (Strings) mediante `==`.
+    
+    ![Captura SonarCloud Issue Comparison](img/Compare-Strings-Sonarcloud.png)
+    ![Código comparación incorrecta](img/Compare-Strings.png)
+
+* **Explicación del bad smell:**
+    * **Descripción:** Uso de `==` para comparar el contenido de dos objetos de tipo String.
+    * **Problema:** `==` compara referencias de memoria, no el valor. En lógica bancaria, esto puede causar que dos cuentas iguales no se reconozcan como tales.
+    * **Cómo solucionarlo:** Usar el método `.equals()`.
 
 
 ## 3.2 Bad Smells detectados manualmente
