@@ -110,4 +110,31 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 
   * Como solucionarlo: El problema se solucionaría creando una constante `DEPOSIT_CONFIRMATION` cuyo valor sea el String, y usándola en todos los lugares donde se necesita ese String. De esta manera al cambiar el valor de la constante se refleja en todos los demás lugares y se mantiene consistente.
 
+  ### Bad Smell 6: Data Clumps (Racimos de Datos)
+* **Ubicación:** `AccountService.java` - Métodos `deposit`, `withdraw` y `transfer`.
+* **Reporte de la issue:**
+
+    ![Data Clumps](img/data-clumps.png)
+
+* **Explicación del bad smell:**
+    * **Descripción:** En varios métodos se pasan constantemente los mismos conjuntos de parámetros juntos. Por ejemplo, siempre que se envía una notificación, se pasan `User user`, `NotificationType`, `String subject` y `String message`.
+    
+    * **Problema:** Existe un grupo de datos que "siempre van juntos" pero no han sido encapsulados en un objeto propio. Esto aumenta la complejidad de las firmas de los métodos y dificulta la reutilización de la lógica de notificación. Es un indicador de que falta una abstracción (como una clase `Notification Request`).
+
+    * **Cómo solucionarlo:** El problema se puede solucionar creando un objeto de datos (Data Object) o un *Record* que agrupe estos campos. De esta manera, en lugar de pasar cuatro parámetros independientes, los métodos recibirían un único objeto de configuración de notificación.
+
+### Bad Smell 7: Magic Numbers (Números Mágicos)
+* **Ubicación:** `AccountService.java` - Métodos `deposit` (Líneas 77-89) y `withdraw`(Líneas 176-182).
+* **Reporte de la issue:**
+
+    ![Magic Numbers](img/magic-numbers1.png)
+    ![Magic Numbers](img/magic-numbers2.png)
+
+* **Explicación del bad smell:**
+    * **Descripción:** Se utilizan valores numéricos literales como `10000`, `50000`, `5000` o `20000` directamente en la lógica de control sin ninguna explicación sobre su origen o significado.
+
+    * **Problema:** Un desarrollador externo no puede saber si estos límites responden a una lógica de negocio, a una restricción técnica o a una normativa legal. Al estar "hard-coded", si el banco decide cambiar estos límites, hay que buscarlos y reemplazarlos manualmente en todo el código, lo que facilita la aparición de errores.
+
+    * **Cómo solucionarlo:** La solución consiste en extraer estos valores a constantes con nombres descriptivos (por ejemplo, `MAX_DEPOSIT_THRESHOLD` o `DAILY_WITHDRAWAL_LIMIT`). Esto centraliza la configuración en un solo lugar y hace que el código sea autodocumentado.
+
 ---
