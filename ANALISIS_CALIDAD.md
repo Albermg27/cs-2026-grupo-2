@@ -24,16 +24,26 @@ Captura de pantalla del **dashboard** (Overview) de SonarCloud donde se visualiz
 ## 3. Detección y Análisis de Bad Smells
 A continuación, se detallan los problemas detectados en la clase `AccountService.java` mediante el uso de SonarCloud e inspección manual.
 
-### Bad Smell X: [Nombre de la issue, p.e. Duplicación de código en X método]
-* **Ubicación:** `AccountService.java` - Línea [Indicar línea/s]
+## 3.1 Bad Smells detectados por SonarCloud
+### Bad Smell 1: Literales duplicados
+* **Ubicación:** `AccountService.java` - Líneas `107`, `114`, `156` y `163`.
 * **Reporte de la issue:**
-    > **Nota:** Si se detectó con SonarCloud, adjuntar captura de la issue en la plataforma. Si fue manual, adjuntar captura del código resaltado.
-    ![Captura Issue 1](ruta/a/tu/imagen_issue1.png)
+
+    ![Captura SonarCloud](img/duplicate-literals-sonarcloud.png)
+
+    ![Strings Duplicados 1](img/duplicate-literals.png)
+
+    ![Strings Duplicados 2](img/duplicate-literals2.png)
 
 * **Explicación del bad smell:**
-    [Escribir aquí la explicación basada en los conceptos de la asignatura] Descripción y problema
+  * Descripción: Encontramos cuatro Strings literales idénticos hardcodeados en la clase. Esto efectivamente es así, no se trata de un falso positivo.
+  
+  * Problema: En caso de querer cambiar el String, el proceso de refactor podría generar inconsistencias si no se modifica el String en todos los lugares.
 
-    * Si fue detectado por SonarCloud, **¿Problema real o Falso positivo?**
+  * Como solucionarlo: El problema se solucionaría creando una constante `DEPOSIT_CONFIRMATION` cuyo valor sea el String, y usándola en todos los lugares donde se necesita ese String. De esta manera al cambiar el valor de la constante se refleja en todos los demás lugares y se mantiene consistente.
+
+
+## 3.2 Bad Smells detectados manualmente
 
 ### Bad Smell 1: Duplicación de código en métodos deposit
 * **Ubicación:** `AccountService.java` - Métodos `deposit(String, double, String) y deposit(String, double)`
@@ -53,7 +63,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 
 
 
-### Bad Semll 2: Mysterious Names / Non-Descriptive Names (Nombres poco claros)
+### Bad Smell 2: Mysterious Names / Non-Descriptive Names (Nombres poco claros)
 * **Ubicación:** `AccountService.java` - Método `transfer(String fromAccountNumber, String toAccountNumber, double amount)` Líneas `231-232`
 * **Reporte de la issue:**
 
@@ -97,22 +107,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 
   * Como solucionarlo: El problema se podría solucionar fragmentando la lógica de este método en métodos más pequeños que se encarguen de realizar una única tarea cada uno, en vez de tener todo el código concentrado en un único método.
 
-### Bad Smell 5: Literales duplicados
-* **Ubicación:** `AccountService.java` - Líneas `107`, `114`, `156` y `163`.
-* **Reporte de la issue:**
-
-    ![Strings Duplicados 1](img/duplicate-literals.png)
-
-    ![Strings Duplicados 2](img/duplicate-literals2.png)
-
-* **Explicación del bad smell:**
-  * Descripción: Encontramos cuatro Strings literales idénticos hardcodeados en la clase. 
-  
-  * Problema: En caso de querer cambiar el String, el proceso de refactor podría generar inconsistencias si no se modifica el String en todos los lugares.
-
-  * Como solucionarlo: El problema se solucionaría creando una constante `DEPOSIT_CONFIRMATION` cuyo valor sea el String, y usándola en todos los lugares donde se necesita ese String. De esta manera al cambiar el valor de la constante se refleja en todos los demás lugares y se mantiene consistente.
-
-### Bad Smell 6: Data Clumps (Racimos de Datos)
+### Bad Smell 5: Data Clumps (Racimos de Datos)
 * **Ubicación:** `AccountService.java` - Métodos `deposit`, `withdraw` y `transfer`.
 * **Reporte de la issue:**
 
@@ -125,7 +120,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 
     * **Cómo solucionarlo:** El problema se puede solucionar creando un objeto de datos (Data Object) o un *Record* que agrupe estos campos. De esta manera, en lugar de pasar cuatro parámetros independientes, los métodos recibirían un único objeto de configuración de notificación.
 
-### Bad Smell 7: Magic Numbers (Números Mágicos)
+### Bad Smell 6: Magic Numbers (Números Mágicos)
 * **Ubicación:** `AccountService.java` - Métodos `deposit` (Líneas 77-89) y `withdraw` (Líneas 176-182).
 * **Reporte de la issue:**
 
