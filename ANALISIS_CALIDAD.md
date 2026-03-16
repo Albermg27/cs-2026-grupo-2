@@ -217,3 +217,16 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Descripción:** Para evitar transferencias a la misma cuenta, el servicio obtiene los números de cuenta de ambos objetos (m y o) y los compara directamente: if (m.getAccountNumber() == o.getAccountNumber()).
     * **Problema:** Violación del encapsulamiento, el servicio demuestra un conocimiento excesivo sobre la estructura interna de la entidad Account. En general no se deben pedir datos a un objeto para tomar decisiones por él, sino pedirle al objeto que tome la decisión.
     * **Cómo solucionarlo:** En lugar de pedirle datos a los objetos para compararlos fuera, le pides al objeto que realice la comparación internamente. En la clase Account se debería implementar un método equals() adecuado o un método de conveniencia como isSameAccountAs(Account other) y en el AccountService habría que sustituir la comparación de atributos por una llamada al método del objeto.
+
+### Bad Smell 11: Dead Code (Código muerto)
+* **Ubicación:** `AccountService.java` - Método `deposit` - Líneas 87-89
+
+* **Reporte de la issue:**
+  
+    ![Dead Code](img/deadCode_amount.png)
+
+* **Explicación del mal olor:**
+
+    * **Descripción:** Aparece una condición if (amount > 50000) después de otra que comprueba if (amount > 10000)
+    * **Problema:** Nunca se ejecuta la última condición, ya que si es mayor que 50000 también lo será de 10000, por lo que entrará en if (amount > 10000), lanzará la excepción y el método terminará ahí. La comprobación de 50000 es invisible para el programa.
+    * **Cómo solucionarlo:** Eliminar la condición if (amount > 50000).
