@@ -134,4 +134,21 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 
     * **Cómo solucionarlo:** La solución consiste en extraer estos valores a constantes con nombres descriptivos (por ejemplo, `MAX_DEPOSIT_THRESHOLD` o `DAILY_WITHDRAWAL_LIMIT`). Esto centraliza la configuración en un solo lugar y hace que el código sea autodocumentado.
 
+
+### Bad Smell 7: Switch Statement (Sentencias Condicionales Complejas)
+* **Ubicación:** `AccountService.java` - Dentro de los métodos `deposit`, `withdraw` y `transfer` - Líneas 103, 110, 152, 159, 202, 208, 267 y 273
+
+* **Reporte de la issue:**
+  
+<img width="600" height="807" alt="image" src="https://github.com/user-attachments/assets/4b360d4f-529d-4901-ab9f-5d958ecf35c2">
+<img width="600" height="836" alt="image" src="https://github.com/user-attachments/assets/79de44b7-513e-41ee-b823-0f6af2430458">
+<img width="600" height="715" alt="image" src="https://github.com/user-attachments/assets/4b55ab82-f548-46d5-9a30-f9011db17b59">
+<img width="600" height="678" alt="image" src="https://github.com/user-attachments/assets/bd310429-d3eb-4758-b3b2-1d94e43d9dd6">
+
+* **Explicación del mal olor:**
+
+    * **Descripción:** Se repite constantemente la estructura if (notifType == User.NotificationType.EMAIL) { … } else if (notifType == User.NotificationType.SMS) { … }. Cada vez que se añada un nuevo canal de notificación (como notificaciones push) habrá que buscar y modificar todos estos bloques en toda la clase, aumentando el riesgo de introducir errores y dificultando el mantenimiento de la aplicación.
+    * **Problema:** Es una violación del polimorfismo, el servicio asume la responsabilidad de cómo notificar basándose en el tipo de usuario.
+    * **Cómo solucionarlo:** Eliminar la responsabilidad de decidir cómo enviar del AccountService y delegarla a los propios servicios de notificación mediante una interfaz común.
+  
 ---
