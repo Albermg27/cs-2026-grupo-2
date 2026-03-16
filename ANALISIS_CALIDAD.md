@@ -56,6 +56,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 ### Bad Semll 2: Mysterious Names / Non-Descriptive Names (Nombres poco claros)
 * **Ubicación:** `AccountService.java` - Método `transfer(String fromAccountNumber, String toAccountNumber, double amount)` Líneas `231-232`
 * **Reporte de la issue:**
+
   ![Mysterious Names](img/MysteriousNames.png)
 * **Explicación del bad smell:**
     * Descripción: En el método transfer se utilizan variables con nombres muy cortos y poco descriptivos (m y o). Estos nombres no reflejan claramente qué representan dentro de la lógica del método.
@@ -67,6 +68,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 ### Bad Smell 3: Large Class (Clase Grande)
 * **Ubicación:** `AccountService.java` - Toda la clase `AccountService` Líneas `1-326`
 * **Reporte de la issue:**
+
   ![Large Class](img/LargeClass.png)
 * **Explicación del bad smell:**
    * **Descripción:** La clase `AccountService` concentra demasiadas responsabilidades dentro de una única clase. Entre sus funciones se encuentran la creación de cuentas, la gestión de depósitos y transferencias, el registro de transacciones, la lógica de generación de números de cuenta y la gestión de notificaciones a los usuarios.
@@ -110,7 +112,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 
   * Como solucionarlo: El problema se solucionaría creando una constante `DEPOSIT_CONFIRMATION` cuyo valor sea el String, y usándola en todos los lugares donde se necesita ese String. De esta manera al cambiar el valor de la constante se refleja en todos los demás lugares y se mantiene consistente.
 
-  ### Bad Smell 6: Data Clumps (Racimos de Datos)
+### Bad Smell 6: Data Clumps (Racimos de Datos)
 * **Ubicación:** `AccountService.java` - Métodos `deposit`, `withdraw` y `transfer`.
 * **Reporte de la issue:**
 
@@ -124,7 +126,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Cómo solucionarlo:** El problema se puede solucionar creando un objeto de datos (Data Object) o un *Record* que agrupe estos campos. De esta manera, en lugar de pasar cuatro parámetros independientes, los métodos recibirían un único objeto de configuración de notificación.
 
 ### Bad Smell 7: Magic Numbers (Números Mágicos)
-* **Ubicación:** `AccountService.java` - Métodos `deposit` (Líneas 77-89) y `withdraw`(Líneas 176-182).
+* **Ubicación:** `AccountService.java` - Métodos `deposit` (Líneas 77-89) y `withdraw` (Líneas 176-182).
 * **Reporte de la issue:**
 
     ![Magic Numbers](img/magic-numbers1.png)
