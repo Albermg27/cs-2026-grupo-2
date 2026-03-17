@@ -10,7 +10,7 @@
 | Jorge Padilla Rodríguez | j.padilla.2021@alumnos.urjc.es | Jorge-PR |
 | Naroa Martín Simón | n.martins.2022@alumnos.urjc.es | NaroaMS04 |
 | Alberto Mayoral Gómez | a.mayoral.2022@alumnos.urjc.es | Albermg27 |
-| Icíar Moreno López | i.morenolo.2022@alumnos.urjc.es | IciarML] |
+| Icíar Moreno López | i.morenolo.2022@alumnos.urjc.es | IciarML |
 | [Nombre 7] | [email5]@alumnos.urjc.es | [User5] |
 
 ---
@@ -71,6 +71,8 @@ En esta práctica he realizado una revisión manual del código para identificar
 |:------------: |:------------:|
 |1| [Bad Smell 2: Mysterious Names / Non-Descriptive Names](https://github.com/Albermg27/cs-2026-grupo-2/commit/2738af3575546148ee3ccedcae3b236e8c44a39c)  |
 |2| [Bad Smell 3: Large Class](https://github.com/Albermg27/cs-2026-grupo-2/commit/0be9ed6c9634d7111eb1c08acc194acd8dd18ee9)  |
+
+---
 
 #### **Alumno 6 - Icíar Moreno López**
 
