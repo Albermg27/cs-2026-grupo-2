@@ -11,7 +11,7 @@
 | Naroa Martín Simón | n.martins.2022@alumnos.urjc.es | NaroaMS04 |
 | Alberto Mayoral Gómez | a.mayoral.2022@alumnos.urjc.es | Albermg27 |
 | Icíar Moreno López | i.morenolo.2022@alumnos.urjc.es | IciarML |
-| [Nombre 7] | [email5]@alumnos.urjc.es | [User5] |
+| Laura Pineda Ballesteros | l.pineda.2022@alumnos.urjc.es | lauraxpb |
 
 ---
 
@@ -36,7 +36,7 @@ Para esta práctica he realizado las siguientes tareas: he identificado manualme
 
 | Nº    | Commits      |
 |:------------: |:------------:|
-|1| [Bad Smeels: Data Clumps y Magic Numbers](https://github.com/Albermg27/cs-2026-grupo-2/commit/2008713329e8d1ad508ef72a494dd66ae1d104eb)  |
+|1| [Bad Smells: Data Clumps y Magic Numbers](https://github.com/Albermg27/cs-2026-grupo-2/commit/2008713329e8d1ad508ef72a494dd66ae1d104eb)  |
 |2| [Bad Smells SonarCloud: Variable local no utilizada y Comparación de Strings con operador de identidad](https://github.com/Albermg27/cs-2026-grupo-2/commit/29af02cd1448e647b9d99a9d1e8028cc15ce60b2)  |
 
 ---
@@ -82,5 +82,15 @@ En esta práctica me he encargado de combinar el análisis automático de SonarC
 |:------------: |:------------:|
 |1| [Bad Smell - Switch Statement](https://github.com/Albermg27/cs-2026-grupo-2/commit/9f86495ce5937a22a79f828cc51459325cf4d39f)  |
 |2| [Bad Smell - Inappropriate Intimacy](https://github.com/Albermg27/cs-2026-grupo-2/commit/beb050539ddb2f481fd6e17c7466f96c7d41ae23)  |
+
+---
+
+#### **Alumno 7 - Laura Pineda Ballesteros**
+
+En esta práctica he añadido dos nuevos bad smells en la memoria de análisis: **Generic Exception Catching** (captura genérica de excepciones en controladores) y **Temporary Stub / Incomplete Business Logic** (algoritmo de aprobación de préstamos con retorno fijo de aprobado).
+
+| Nº    | Commits      |
+|:------------: |:------------:|
+|1| [Bad smells 15 y 16 añadidos en ANALISIS_CALIDAD.md](PENDIENTE_ENLACE_COMMIT)  |
 
 ---
