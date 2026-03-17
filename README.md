@@ -8,7 +8,7 @@
 | Marcos García García | m.garciaga.2022@alumnos.urjc.es | marcosgrc |
 | Adrián Muñoz Serrano | a.munozse.2022@alumnos.urjc.es | adri04ms |
 | Jorge Padilla Rodríguez | j.padilla.2021@alumnos.urjc.es | Jorge-PR |
-| [Nombre 4] | [email4]@alumnos.urjc.es | [User4] |
+| Naroa Martín Simón | n.martins.2022@alumnos.urjc.es | NaroaMS04 |
 | [Nombre 5] | [email5]@alumnos.urjc.es | [User5] |
 | [Nombre 6] | [email5]@alumnos.urjc.es | [User5] |
 | [Nombre 7] | [email5]@alumnos.urjc.es | [User5] |
@@ -53,17 +53,13 @@ Durante esta práctica he realizado la detección manual de los siguientes code 
 
 ---
 
-#### **Alumno 4 - [Nombre Completo]**
+#### **Alumno 4 - Naroa Martín Simón**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+En esta práctica me he encargado de revisar a mano la clase AccountService.java para encontrar fallos de diseño que SonarCloud no detecta. He analizado dos problemas: Primitive Obsession, que trata sobre cómo el uso excesivo de tipos básicos (como double o String) para el dinero o las cuentas puede causar errores; y Feature Envy, donde he explicado que el servicio está "cotilleando" demasiado el saldo de las cuentas en lugar de dejar que la propia clase Account gestione su lógica interna.
 
 | Nº    | Commits      |
 |:------------: |:------------:|
-|1| [Issue detectada](URL_commit_1)  |
-|2| [Prueba unitaria implementada](URL_commit_2)  |
-|3| [Refactorización implementada](URL_commit_3)  |
-|4| [Caso de TDD implementado](URL_commit_4)  |
-|5| [Prueba de sistema implementada](URL_commit_5)  |
+|1| [Bad smells 8 and 9 added: Primitive Obsession y Feature Envy](https://github.com/Albermg27/cs-2026-grupo-2/commit/caa1cef5baf1f8c89de75bc97b75bcaefff4818a)  |
 
 ---
 
