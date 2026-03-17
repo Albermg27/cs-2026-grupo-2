@@ -236,7 +236,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
 
 * **Reporte de la issue:**
   
-    ![Duplicate Logic](img/amount<=0.png)
+    ![Duplicate Logic](img/amountle0.png)
 
 * **Explicación del mal olor:**
 
@@ -258,3 +258,16 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Descripción:** Se comprueba en todos estos métodos si amount es positivo y si es menor que una cierta cantidad
     * **Problema:** Al separarlos, obligas a quien mantenga el código a actualizar todos los métodos si decides cambiar las condiciones de validación de amount. Aumenta la probabilidad de introducir inconsistencias, además de esfuerzo de mantenimiento.
     * **Cómo solucionarlo:** Extraer un método que realice esta validación, por ejemplo validateAmount(double amount, double maxLimit), y sea llamado por estos métodos.
+
+### Bad Smell 14: Uncommunicative Name (Nombre poco comunicativo)
+* **Ubicación:** `AccountService.java` - Método `rm` - Línea 301
+
+* **Reporte de la issue:**
+  
+    ![Uncommunicative Name](img/metodo_rm.png)
+
+* **Explicación del mal olor:**
+
+    * **Descripción:** El método tiene como nombre 'rm'.
+    * **Problema:** No describe correctamente la intención del método, obligando a leer su código para adivinarlo. Esto aumenta el tiempo necesario para mantener o modificar el código. Además, rompe la consistencia con el resto de nombres de métodos, que siguiendo el patrón se esperaría que se llamara, por ejemplo, deleteAccount, por lo que se pierde predecibilidad.
+    * **Cómo solucionarlo:** Cambiar el nombre del método a uno más descriptivo y apropiado como deleteAccount.
