@@ -179,7 +179,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Problema:** Es una violación del polimorfismo, el servicio asume la responsabilidad de cómo notificar basándose en el tipo de usuario.
     * **Cómo solucionarlo:** Eliminar la responsabilidad de decidir cómo enviar del AccountService y delegarla a los propios servicios de notificación mediante una interfaz común.
   
-### Bad Smell 8: Primitive Obsession (Obsesión por los Primitivos) - NAROA
+### Bad Smell 8: Primitive Obsession (Obsesión por los Primitivos)
 * **Ubicación:** `AccountService.java` - Uso general de `double amount` y `String accountNumber`.
 * **Reporte de la issue:**
 
@@ -192,7 +192,7 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Problema:** Se pierden oportunidades para encapsular lógica de validación y formateo. Como se observa en las tres capturas, la validación para asegurar que un monto sea positivo se repite manualmente en `deposit` y `withdraw`, y el formato de la cuenta no está garantizado en `transfer`. Esto deja la lógica de validación dispersa por todo el servicio, aumentando el riesgo de inconsistencias.
     * **Cómo solucionarlo:** Crear *Value Objects* como una clase o record `Money` y `AccountNumber`. De esta forma, la validación ocurre una sola vez en el constructor del objeto y el servicio recibe datos cuya integridad ya está garantizada por el tipo.
 
-### Bad Smell 9: Feature Envy (Envidia de Funciones) - NAROA
+### Bad Smell 9: Feature Envy (Envidia de Funciones) 
 * **Ubicación:** `AccountService.java` - Métodos `withdraw` y `transfer`.
 * **Reporte de la issue:**
 
