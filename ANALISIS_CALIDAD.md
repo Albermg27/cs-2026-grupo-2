@@ -271,3 +271,33 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Descripción:** El método tiene como nombre 'rm'.
     * **Problema:** No describe correctamente la intención del método, obligando a leer su código para adivinarlo. Esto aumenta el tiempo necesario para mantener o modificar el código. Además, rompe la consistencia con el resto de nombres de métodos, que siguiendo el patrón se esperaría que se llamara, por ejemplo, deleteAccount, por lo que se pierde predecibilidad.
     * **Cómo solucionarlo:** Cambiar el nombre del método a uno más descriptivo y apropiado como deleteAccount.
+
+### Bad Smell 15: Generic Exception Catching (Captura genérica de excepciones)
+* **Ubicación:** `LoanController.java`, `DashboardController.java` y `TransferController.java` - bloques `catch (Exception e)`
+
+* **Reporte de la issue:**
+
+    ![Generic Exception Catch](img/generic-exception-catch.png)
+
+    Se observa repetición de bloques `catch (Exception e)` en los controladores de préstamos, dashboard y transferencias.
+
+* **Explicación del mal olor:**
+
+    * **Descripción:** En varios controladores se captura `Exception` de forma genérica en lugar de capturar excepciones concretas del dominio.
+    * **Problema:** Se oculta la causa real de los errores y se dificulta el diagnóstico. Además, distintos fallos terminan tratándose igual, perdiendo calidad en el manejo de errores.
+    * **Cómo solucionarlo:** Capturar excepciones específicas (por ejemplo, `IllegalArgumentException`) y delegar el resto a un manejador global con `@ControllerAdvice`.
+
+### Bad Smell 16: Temporary Stub / Incomplete Business Logic (Lógica provisional)
+* **Ubicación:** `LoanApprovalAlgorithm.java` - Método `evaluate` - Línea 8
+
+* **Reporte de la issue:**
+
+    ![Loan Algorithm Stub](img/loan-algorithm.png)
+
+    El método `evaluate` contiene un retorno fijo de aprobación (`new LoanEvaluationResult(true, "Aprobado")`) sin aplicar reglas de decisión.
+
+* **Explicación del mal olor:**
+
+    * **Descripción:** El algoritmo de evaluación de préstamos devuelve siempre un resultado aprobado (`new LoanEvaluationResult(true, "Aprobado")`).
+    * **Problema:** No existe lógica real de evaluación de riesgo, por lo que la decisión de aprobación queda falseada y puede generar comportamientos incorrectos en el sistema.
+    * **Cómo solucionarlo:** Implementar reglas de evaluación reales (ingresos, endeudamiento, historial, riesgo) antes de devolver el resultado.
