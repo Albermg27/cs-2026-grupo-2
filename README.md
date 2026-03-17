@@ -10,7 +10,7 @@
 | Jorge Padilla Rodríguez | j.padilla.2021@alumnos.urjc.es | Jorge-PR |
 | Naroa Martín Simón | n.martins.2022@alumnos.urjc.es | NaroaMS04 |
 | Alberto Mayoral Gómez | a.mayoral.2022@alumnos.urjc.es | Albermg27 |
-| [Nombre 6] | [email5]@alumnos.urjc.es | [User5] |
+| Icíar Moreno López | i.morenolo.2022@alumnos.urjc.es | IciarML] |
 | [Nombre 7] | [email5]@alumnos.urjc.es | [User5] |
 
 ---
@@ -72,16 +72,13 @@ En esta práctica he realizado una revisión manual del código para identificar
 |1| [Bad Smell 2: Mysterious Names / Non-Descriptive Names](https://github.com/Albermg27/cs-2026-grupo-2/commit/2738af3575546148ee3ccedcae3b236e8c44a39c)  |
 |2| [Bad Smell 3: Large Class](https://github.com/Albermg27/cs-2026-grupo-2/commit/0be9ed6c9634d7111eb1c08acc194acd8dd18ee9)  |
 
-#### **Alumno 6 - [Nombre Completo]**
+#### **Alumno 6 - Icíar Moreno López**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+En esta práctica me he encargado de combinar el análisis automático de SonarCloud con una inspección manual de la clase AccountService.java. Mi enfoque se ha centrado en detectar problemas de acoplamiento y falta de polimorfismo que degradan la mantenibilidad del sistema. He analizado en profundidad dos problemas críticos: el uso de Switch Statements en el sistema de avisos, que obligaría a modificar el servicio cada vez que se añada un canal de comunicación, y la Intimidad Inapropiada en la comparación de cuentas, donde el servicio manipula datos internos de las entidades rompiendo el encapsulamiento.
 
 | Nº    | Commits      |
 |:------------: |:------------:|
-|1| [Issue detectada](URL_commit_1)  |
-|2| [Prueba unitaria implementada](URL_commit_2)  |
-|3| [Refactorización implementada](URL_commit_3)  |
-|4| [Caso de TDD implementado](URL_commit_4)  |
-|5| [Prueba de sistema implementada](URL_commit_5)  |
+|1| [Bad Smell - Switch Statement](https://github.com/Albermg27/cs-2026-grupo-2/commit/9f86495ce5937a22a79f828cc51459325cf4d39f)  |
+|2| [Bad Smell - Inappropriate Intimacy](https://github.com/Albermg27/cs-2026-grupo-2/commit/beb050539ddb2f481fd6e17c7466f96c7d41ae23)  |
 
 ---
