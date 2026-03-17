@@ -7,7 +7,7 @@
 |:--- |:--- |:--- |
 | Marcos García García | m.garciaga.2022@alumnos.urjc.es | marcosgrc |
 | Adrián Muñoz Serrano | a.munozse.2022@alumnos.urjc.es | adri04ms |
-| [Nombre 3] | [email3]@alumnos.urjc.es | [User3] |
+| Jorge Padilla Rodríguez | j.padilla.2021@alumnos.urjc.es | Jorge-PR |
 | [Nombre 4] | [email4]@alumnos.urjc.es | [User4] |
 | [Nombre 5] | [email5]@alumnos.urjc.es | [User5] |
 | [Nombre 6] | [email5]@alumnos.urjc.es | [User5] |
@@ -41,17 +41,15 @@ Para esta práctica he realizado las siguientes tareas: he identificado manualme
 
 ---
 
-#### **Alumno 3 - [Nombre Completo]**
+#### **Alumno 3 - Jorge Padilla Rodríguez**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+Durante esta práctica he realizado la detección manual de los siguientes code smells: bad smell 11, referente a la existencia de código muerto dentro del método deposit; bad smell 12, que describe código duplicado o redundante dentro del método deposit; bad smell 13, que muestra cómo aparece código duplicado (la validación de una variable) a lo largo de los métodos deposit, withdraw y transfer; bad smell 14, donde vemos que el método rm tiene un nombre poco comunicativo.
 
 | Nº    | Commits      |
 |:------------: |:------------:|
-|1| [Issue detectada](URL_commit_1)  |
-|2| [Prueba unitaria implementada](URL_commit_2)  |
-|3| [Refactorización implementada](URL_commit_3)  |
-|4| [Caso de TDD implementado](URL_commit_4)  |
-|5| [Prueba de sistema implementada](URL_commit_5)  |
+|1| [Bad smell 11: código muerto dentro del método deposit](https://github.com/Albermg27/cs-2026-grupo-2/commit/bb9f0a1d3d3ad7f0617ce1bad77b251c15ba8c37)  |
+|2| [Bad smells 12 y 13: código duplicado en deposit y en varios métodos](https://github.com/Albermg27/cs-2026-grupo-2/commit/e8e92c37d5d9b2904fbcb7993ad92e329bebb905)  |
+|3| [Bad smell 14: nombre de método poco comunicativo](https://github.com/Albermg27/cs-2026-grupo-2/commit/7807b3b361d84d4ff161600c8df9f82b68016a0f)  |
 
 ---
 
