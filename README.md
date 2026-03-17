@@ -6,7 +6,7 @@
 | Nombre y Apellidos | Correo URJC | Usuario GitHub |
 |:--- |:--- |:--- |
 | Marcos García García | m.garciaga.2022@alumnos.urjc.es | marcosgrc |
-| [Nombre 2] | [email2]@alumnos.urjc.es | [User2] |
+| Adrián Muñoz Serrano | a.munozse.2022@alumnos.urjc.es | adri04ms |
 | [Nombre 3] | [email3]@alumnos.urjc.es | [User3] |
 | [Nombre 4] | [email4]@alumnos.urjc.es | [User4] |
 | [Nombre 5] | [email5]@alumnos.urjc.es | [User5] |
