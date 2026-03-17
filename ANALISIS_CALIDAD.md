@@ -230,3 +230,31 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Descripción:** Aparece una condición if (amount > 50000) después de otra que comprueba if (amount > 10000)
     * **Problema:** Nunca se ejecuta la última condición, ya que si es mayor que 50000 también lo será de 10000, por lo que entrará en if (amount > 10000), lanzará la excepción y el método terminará ahí. La comprobación de 50000 es invisible para el programa.
     * **Cómo solucionarlo:** Eliminar la condición if (amount > 50000).
+
+### Bad Smell 12: Duplicate Code (Código duplicado)
+* **Ubicación:** `AccountService.java` - Método `deposit` - Líneas 78-83
+
+* **Reporte de la issue:**
+  
+    ![Duplicate Logic](img/amount<=0.png)
+
+* **Explicación del mal olor:**
+
+    * **Descripción:** Se comprueban dos condiciones cuyos bloques tienen el mismo código.
+    * **Problema:** Al separarlos, obligas a quien mantenga el código a actualizar dos sitios si, por ejemplo, decides cambiar el mensaje de error o el tipo de excepción. Aumenta la probabilidad de introducir inconsistencias.
+    * **Cómo solucionarlo:** Unir las condiciones en una sola con amount <= 0.
+
+### Bad Smell 13: Duplicate Code (Código duplicado)
+* **Ubicación:** `AccountService.java` - Métodos `deposit`, `withdraw` y `transfer` - Líneas 78-89, 127-138, 176-182 y 224-229
+
+* **Reporte de la issue:**
+  
+    ![Duplicate code 1](img/if_deposit.png)
+    ![Duplicate code 2](img/if_withdraw.png)
+    ![Duplicate code 3](img/if_transfer.png)
+
+* **Explicación del mal olor:**
+
+    * **Descripción:** Se comprueba en todos estos métodos si amount es positivo y si es menor que una cierta cantidad
+    * **Problema:** Al separarlos, obligas a quien mantenga el código a actualizar todos los métodos si decides cambiar las condiciones de validación de amount. Aumenta la probabilidad de introducir inconsistencias, además de esfuerzo de mantenimiento.
+    * **Cómo solucionarlo:** Extraer un método que realice esta validación, por ejemplo validateAmount(double amount, double maxLimit), y sea llamado por estos métodos.
