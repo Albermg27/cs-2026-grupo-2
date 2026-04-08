@@ -84,6 +84,7 @@ public class AccountService {
         if (amount > 10000) {
             throw new IllegalArgumentException("Amount exceeds maximum deposit limit");
         }
+        // Rama inalcanzable
         if (amount > 50000) {
             throw new IllegalArgumentException("Amount exceeds maximum deposit limit");
         }
@@ -133,6 +134,7 @@ public class AccountService {
         if (amount > 10000) {
             throw new IllegalArgumentException("Amount exceeds maximum deposit limit");
         }
+        // Rama inalcanzable
         if (amount > 50000) {
             throw new IllegalArgumentException("Amount exceeds maximum deposit limit");
         }
@@ -269,13 +271,15 @@ public class AccountService {
                     m.getUser(),
                     Notification.NotificationType.TRANSFER,
                     "Transfer Sent",
-                    String.format("Transfer of %.2f EUR to %s. New balance: %.2f EUR", amount, toAccountNumber, m.getBalance()));
+                    String.format("Transfer of %.2f EUR to %s. New balance: %.2f EUR", amount, toAccountNumber,
+                            m.getBalance()));
         } else if (notifType == User.NotificationType.SMS) {
             smsService.sendNotification(
-                    m.getUser(), 
-                    Notification.NotificationType.TRANSFER, 
+                    m.getUser(),
+                    Notification.NotificationType.TRANSFER,
                     "Transfer Sent",
-                    String.format("Transfer of %.2f EUR to %s. New balance: %.2f EUR", amount, toAccountNumber, m.getBalance()));
+                    String.format("Transfer of %.2f EUR to %s. New balance: %.2f EUR", amount, toAccountNumber,
+                            m.getBalance()));
         }
 
         User.NotificationType notifTypeTo = o.getUser().getNotificationType();
@@ -285,13 +289,14 @@ public class AccountService {
                     Notification.NotificationType.TRANSFER,
                     "Transfer Received",
                     String.format("Transfer of %.2f EUR from %s. New balance: %.2f EUR",
-                        amount, fromAccountNumber, o.getBalance()));
+                            amount, fromAccountNumber, o.getBalance()));
         } else if (notifTypeTo == User.NotificationType.SMS) {
             smsService.sendNotification(
-                o.getUser(), 
-                Notification.NotificationType.TRANSFER, 
-                "Transfer Received",
-                String.format("Transfer of %.2f EUR from %s. New balance: %.2f EUR", amount, fromAccountNumber, o.getBalance()));
+                    o.getUser(),
+                    Notification.NotificationType.TRANSFER,
+                    "Transfer Received",
+                    String.format("Transfer of %.2f EUR from %s. New balance: %.2f EUR", amount, fromAccountNumber,
+                            o.getBalance()));
         }
     }
 
