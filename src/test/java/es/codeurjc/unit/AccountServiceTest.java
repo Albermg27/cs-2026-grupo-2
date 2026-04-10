@@ -15,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -215,5 +218,65 @@ public class AccountServiceTest {
                 eq("Deposit Confirmation"),
                 eq("Deposit of 100,00 EUR. New balance: 1100,00 EUR"));
         verifyNoInteractions(smsService);
+    }
+
+    // --- Tests for getAccount(String accountNumber) and getUserAccounts(User user) ---
+
+    @Test
+    void getAccount_accountNotFound_throwsException() {
+        // GIVEN
+        when(accountRepository.findByAccountNumber("ES000")).thenReturn(Optional.empty());
+
+        // WHEN & THEN
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            accountService.getAccount("ES000");
+        });
+        assertEquals("Account not found", exception.getMessage());
+    }
+
+    @Test
+    void getAccount_validAccountNumber_success() {
+        // GIVEN
+        Account account = new Account("ES123", Account.AccountType.CHECKING, 1000.0);
+        when(accountRepository.findByAccountNumber("ES123")).thenReturn(Optional.of(account));
+
+        // WHEN
+        Account result = accountService.getAccount("ES123");
+
+        // THEN
+        assertEquals("ES123", result.getAccountNumber());
+        assertEquals(1000.0, result.getBalance());
+    }
+
+    @Test
+    void getUserAccounts_noAccounts_returnsEmptyList() {
+        // GIVEN
+        User user = new User();
+        when(accountRepository.findByUser(user)).thenReturn(Collections.emptyList());
+
+        // WHEN
+        List<Account> result = accountService.getUserAccounts(user);
+
+        // THEN
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void getUserAccounts_withAccounts_returnsList() {
+        // GIVEN
+        User user = new User();
+        List<Account> accounts = Arrays.asList(
+            new Account("ES1", Account.AccountType.CHECKING, 100.0),
+            new Account("ES2", Account.AccountType.SAVINGS, 200.0)
+        );
+        when(accountRepository.findByUser(user)).thenReturn(accounts);
+
+        // WHEN
+        List<Account> result = accountService.getUserAccounts(user);
+
+        // THEN
+        assertEquals(2, result.size());
+        assertEquals("ES1", result.get(0).getAccountNumber());
+        assertEquals("ES2", result.get(1).getAccountNumber());
     }
 }
