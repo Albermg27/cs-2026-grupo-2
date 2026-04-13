@@ -279,4 +279,77 @@ public class AccountServiceTest {
         assertEquals("ES1", result.get(0).getAccountNumber());
         assertEquals("ES2", result.get(1).getAccountNumber());
     }
+    
+    // --- Tests for getBalance(String accountNumber) ---
+
+    @Test
+    void getBalance_validAccountNumber_returnsBalance() {
+        // GIVEN
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
+
+        // WHEN
+        double balance = accountService.getBalance(accountNumber);
+
+        // THEN
+        assertEquals(1000.0, balance);
+        verify(accountRepository).findByAccountNumber(accountNumber);
+    }
+
+    @Test
+    void getBalance_accountNotFound_throwsException() {
+        // GIVEN
+        when(accountRepository.findByAccountNumber("INVALID")).thenReturn(Optional.empty());
+
+        // WHEN & THEN
+        assertThrows(IllegalArgumentException.class, () -> {
+            accountService.getBalance("INVALID");
+        });
+    }
+
+    // --- Tests for getTransactions(String accountNumber) ---
+
+    @Test
+    void getTransactions_validAccountWithTransactions_returnsList() {
+        // GIVEN
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
+        
+        List<Transaction> transactions = Arrays.asList(
+            new Transaction(account, Transaction.TransactionType.DEPOSIT, 100.0, "Test 1"),
+            new Transaction(account, Transaction.TransactionType.WITHDRAWAL, 50.0, "Test 2")
+        );
+        when(transactionRepository.findByAccountOrderByTimestampDesc(account)).thenReturn(transactions);
+
+        // WHEN
+        List<Transaction> result = accountService.getTransactions(accountNumber);
+
+        // THEN
+        assertEquals(2, result.size());
+        assertEquals(100.0, result.get(0).getAmount());
+        verify(transactionRepository).findByAccountOrderByTimestampDesc(account);
+    }
+
+    @Test
+    void getTransactions_noTransactions_returnsEmptyList() {
+        // GIVEN
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
+        when(transactionRepository.findByAccountOrderByTimestampDesc(account)).thenReturn(Collections.emptyList());
+
+        // WHEN
+        List<Transaction> result = accountService.getTransactions(accountNumber);
+
+        // THEN
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void getTransactions_accountNotFound_throwsException() {
+        // GIVEN
+        when(accountRepository.findByAccountNumber("NON_EXISTENT")).thenReturn(Optional.empty());
+
+        // WHEN & THEN
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            accountService.getTransactions("NON_EXISTENT");
+        });
+        assertEquals("Account not found", exception.getMessage());
+    }
 }
