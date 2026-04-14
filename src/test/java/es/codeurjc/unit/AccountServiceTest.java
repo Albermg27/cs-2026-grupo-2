@@ -266,8 +266,8 @@ public class AccountServiceTest {
         // GIVEN
         User user = new User();
         List<Account> accounts = Arrays.asList(
-            new Account("ES1", Account.AccountType.CHECKING, 100.0),
-            new Account("ES2", Account.AccountType.SAVINGS, 200.0)
+                new Account("ES1", Account.AccountType.CHECKING, 100.0),
+                new Account("ES2", Account.AccountType.SAVINGS, 200.0)
         );
         when(accountRepository.findByUser(user)).thenReturn(accounts);
 
@@ -279,7 +279,7 @@ public class AccountServiceTest {
         assertEquals("ES1", result.get(0).getAccountNumber());
         assertEquals("ES2", result.get(1).getAccountNumber());
     }
-    
+
     // --- Tests for getBalance(String accountNumber) ---
 
     @Test
@@ -312,10 +312,10 @@ public class AccountServiceTest {
     void getTransactions_validAccountWithTransactions_returnsList() {
         // GIVEN
         when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
-        
+
         List<Transaction> transactions = Arrays.asList(
-            new Transaction(account, Transaction.TransactionType.DEPOSIT, 100.0, "Test 1"),
-            new Transaction(account, Transaction.TransactionType.WITHDRAWAL, 50.0, "Test 2")
+                new Transaction(account, Transaction.TransactionType.DEPOSIT, 100.0, "Test 1"),
+                new Transaction(account, Transaction.TransactionType.WITHDRAWAL, 50.0, "Test 2")
         );
         when(transactionRepository.findByAccountOrderByTimestampDesc(account)).thenReturn(transactions);
 
@@ -401,5 +401,113 @@ public class AccountServiceTest {
         verify(accountRepository, never()).delete(any());
     }
 
+    // --- Tests for withdraw(String accountNumber, double amount, String description) ---
+
+    @Test
+    void withdraw_amountZeroOrNegative_throwsException() {
+        // When & then
+        IllegalArgumentException exceptionZero = assertThrows(IllegalArgumentException.class, () -> {
+            accountService.withdraw(accountNumber, 0.0, "Compra");
+        });
+        assertEquals("Amount must be positive", exceptionZero.getMessage());
+
+        // When & then
+        IllegalArgumentException exceptionNegative = assertThrows(IllegalArgumentException.class, () -> {
+            accountService.withdraw(accountNumber, -100.0, "Compra");
+        });
+        assertEquals("Amount must be positive", exceptionNegative.getMessage());
+    }
+
+    @Test
+    void withdraw_amountExceedsLimit_throwsException() {
+        // When & then
+        IllegalArgumentException exceptionLimit = assertThrows(IllegalArgumentException.class, () -> {
+            accountService.withdraw(accountNumber, 5001.0, "Compra");
+        });
+        assertEquals("Amount exceeds maximum withdrawal limit", exceptionLimit.getMessage());
+    }
+
+    @Test
+    void withdraw_accountNotFound_throwsException() {
+        // Given
+        when(accountRepository.findByAccountNumber("NON_EXISTENT")).thenReturn(Optional.empty());
+
+        // When & Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            accountService.withdraw("NON_EXISTENT", 100.0, "Compra");
+        });
+        assertEquals("Account not found", exception.getMessage());
+    }
+
+    @Test
+    void withdraw_insufficientFunds_throwsException() {
+        // Given
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
+
+        // When & then
+        IllegalArgumentException exceptionFunds = assertThrows(IllegalArgumentException.class, () -> {
+            accountService.withdraw(accountNumber, 1500.0, "Compra");
+        });
+        assertEquals("Insufficient funds", exceptionFunds.getMessage());
+    }
+
+    @Test
+    void withdraw_validAmountAndEmailNotification_success() {
+        // Given
+        user.setNotificationType(User.NotificationType.EMAIL);
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
+        when(accountRepository.save(any(Account.class))).thenReturn(account);
+
+        // When
+        Account result = accountService.withdraw(accountNumber, 200.0, "Compra");
+
+        // Then
+        assertEquals(800.0, result.getBalance());
+        verify(transactionRepository).save(any(Transaction.class));
+        verify(accountRepository).save(account);
+        verify(emailService).sendNotification(
+                eq(user),
+                eq(Notification.NotificationType.WITHDRAWAL),
+                eq("Withdrawal Confirmation"),
+                contains("Withdrawal of 200,00 EUR. New balance: 800,00 EUR"));
+        verifyNoInteractions(smsService);
+    }
+
+    @Test
+    void withdraw_validAmountAndSmsNotification_success() {
+        // Given
+        user.setNotificationType(User.NotificationType.SMS);
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
+        when(accountRepository.save(any(Account.class))).thenReturn(account);
+
+        // When
+        accountService.withdraw(accountNumber, 50.0, "Compra");
+
+        // Then
+        verify(smsService).sendNotification(
+                eq(user),
+                eq(Notification.NotificationType.WITHDRAWAL),
+                eq("Withdrawal"),
+                contains("Withdrawal of 50,00 EUR. New balance: 950,00 EUR"));
+        verifyNoInteractions(emailService);
+    }
+
+    @Test
+    void withdraw_validAmountAndNoNotification_success() {
+        // Given
+        user.setNotificationType(null);
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
+        when(accountRepository.save(any(Account.class))).thenReturn(account);
+
+        // When
+        Account result = accountService.withdraw(accountNumber, 100.0, "Account not found");
+
+        // Then
+        assertEquals(900.0, result.getBalance());
+        verify(accountRepository).save(account);
+        verify(transactionRepository).save(any(Transaction.class));
+        verifyNoInteractions(emailService);
+        verifyNoInteractions(smsService);
+    }
 
 }
