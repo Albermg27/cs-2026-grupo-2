@@ -68,6 +68,35 @@ public class AccountServiceTest {
         account2.setUser(user2);
     }
 
+    // --- Tests for constructor) ---
+
+    @Test
+    void constructor_explicitTest_shouldInitializeCorrectly() {
+        // GIVEN: Creamos mocks locales para esta prueba específica
+        AccountRepository localRepo = mock(AccountRepository.class);
+        TransactionRepository localTransRepo = mock(TransactionRepository.class);
+        EmailNotificationService localEmail = mock(EmailNotificationService.class);
+        SmsNotificationService localSms = mock(SmsNotificationService.class);
+        RandomService localRandom = mock(RandomService.class);
+
+        // WHEN: Invocamos el constructor de AccountService directamente
+        AccountService service = new AccountService(
+                localRepo,
+                localTransRepo,
+                localEmail,
+                localSms,
+                localRandom);
+
+        // THEN: Verificamos que el objeto no es nulo
+        org.junit.jupiter.api.Assertions.assertNotNull(service,
+                "El servicio debería instanciarse correctamente con todas sus dependencias.");
+
+        // Verificación de comportamiento básico para asegurar que las dependencias
+        // internas funcionan
+        when(localRepo.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
+        assertEquals(1000.0, service.getBalance(accountNumber));
+    }
+
     // --- Tests for createAccount(User user, Account.AccountType accountType) ---
 
     @Test
