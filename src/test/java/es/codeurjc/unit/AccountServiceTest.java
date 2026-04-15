@@ -130,7 +130,7 @@ public class AccountServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             accountService.deposit(accountNumber, new Amount(0.0), "Test deposit");
         });
-        assertEquals("Amount must be positive", exception.getMessage());
+        assertEquals("Amount must be greater than zero", exception.getMessage());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class AccountServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             accountService.deposit(accountNumber, new Amount(-50.0), "Test deposit");
         });
-        assertEquals("La cantidad no puede ser negativa", exception.getMessage());
+        assertEquals("Amount must be positive", exception.getMessage());
     }
 
     @Test
@@ -147,7 +147,7 @@ public class AccountServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             accountService.deposit(accountNumber, new Amount(15000.0), "Test deposit");
         });
-        assertEquals("La cantidad no puede superar los 20.000€", exception.getMessage());
+        assertEquals("Amount exceeds maximum deposit limit", exception.getMessage());
     }
 
     @Test
@@ -156,7 +156,7 @@ public class AccountServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             accountService.deposit(accountNumber, new Amount(60000.0), "Test deposit");
         });
-        assertEquals("La cantidad no puede superar los 20.000€", exception.getMessage());
+        assertEquals("Amount exceeds maximum limit of 20,000", exception.getMessage());
     }
 
     @Test
@@ -233,7 +233,7 @@ public class AccountServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             accountService.deposit(accountNumber, new Amount(0.0));
         });
-        assertEquals("Amount must be positive", exception.getMessage());
+        assertEquals("Amount must be greater than zero", exception.getMessage());
     }
 
     @Test
@@ -256,10 +256,11 @@ public class AccountServiceTest {
     @Test
     void depositNoDescription_amountGreaterThan50000_throwsException() {
         // This branch in the service is unreachable because > 10000 throws first
+        // Exception thrown from Amount class constructor
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             accountService.deposit(accountNumber, new Amount(60000.0));
         });
-        assertEquals("Amount exceeds maximum deposit limit", exception.getMessage());
+        assertEquals("Amount exceeds maximum limit of 20,000", exception.getMessage());
     }
 
     @Test
@@ -341,21 +342,21 @@ public class AccountServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             accountService.getAccount(new AccountNumber("ES000"));
         });
-        assertEquals("Account not found", exception.getMessage());
+        assertEquals("Invalid account number format. Must be ES followed by 10 digits.", exception.getMessage());
     }
 
     @Test
     void getAccount_validAccountNumber_success() {
         // GIVEN
-        Account account = new Account("ES123", Account.AccountType.CHECKING, 1000.0);
-        when(accountRepository.findByAccountNumber("ES123")).thenReturn(Optional.of(account));
+        Account account = new Account("ES0000000123", Account.AccountType.CHECKING, 1000.0);
+        when(accountRepository.findByAccountNumber("ES0000000123")).thenReturn(Optional.of(account));
 
         // WHEN
         // Exception thrown from AccountNumber constructor when trying to create AccountNumber with "ES123" because it doesn't have 10 digits, but we want to test getAccount, so we catch that exception and ignore it to proceed with the test
-        Account result = accountService.getAccount(new AccountNumber("ES123"));
+        Account result = accountService.getAccount(new AccountNumber("ES0000000123"));
 
         // THEN
-        assertEquals("ES123", result.getAccountNumber());
+        assertEquals("ES0000000123", result.getAccountNumber());
         assertEquals(1000.0, result.getBalance());
     }
 
@@ -461,7 +462,7 @@ public class AccountServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             accountService.getTransactions(new AccountNumber("NON_EXISTENT"));
         });
-        assertEquals("Account not found", exception.getMessage());
+        assertEquals("Invalid account number format. Must be ES followed by 10 digits.", exception.getMessage());
     }
 
     // --- Tests for rm(String accountNumber) ---
@@ -521,7 +522,7 @@ public class AccountServiceTest {
         IllegalArgumentException exceptionZero = assertThrows(IllegalArgumentException.class, () -> {
             accountService.withdraw(accountNumber, new Amount(0.0), "Compra");
         });
-        assertEquals("Amount must be positive", exceptionZero.getMessage());
+        assertEquals("Amount must be greater than zero", exceptionZero.getMessage());
 
         // When & then
         IllegalArgumentException exceptionNegative = assertThrows(IllegalArgumentException.class, () -> {
@@ -546,9 +547,9 @@ public class AccountServiceTest {
 
         // When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            accountService.withdraw(new AccountNumber("NON_EXISTENT"), new Amount(100.0), "Compra");
+            accountService.withdraw(new AccountNumber("NON_EXISTENT"), amount100, "Compra");
         });
-        assertEquals("Account not found", exception.getMessage());
+        assertEquals("Invalid account number format. Must be ES followed by 10 digits.", exception.getMessage());
     }
 
     @Test
@@ -659,14 +660,15 @@ public class AccountServiceTest {
      */
     @ParameterizedTest(name = "Cantidad {0} debe lanzar error: {1}")
     @CsvSource({
-            "0.0, 'Amount must be positive'",
+            "0.0, 'Amount must be greater than zero'",
             "-1.0, 'Amount must be positive'",
-            "30000.0, 'Amount exceeds maximum transfer limit'"
+            "30000.0, 'Amount exceeds maximum limit of 20,000'"
     })
-    void transfer_invalidAmounts_throwsException(double amount, String expectedMessage) {
+    void transfer_invalidAmounts_throwsException(double value, String expectedMessage) {
         // WHEN & THEN
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            accountService.transfer(accountNumber, accountNumber2, new Amount(amount));
+            Amount amount = new Amount(value); // This will throw for 0.0 and -1.0, but we want to test transfer, so we catch that exception and ignore it to proceed with the test
+            accountService.transfer(accountNumber, accountNumber2, amount);
         });
 
         assertEquals(expectedMessage, exception.getMessage());

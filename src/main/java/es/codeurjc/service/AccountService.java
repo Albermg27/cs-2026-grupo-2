@@ -136,7 +136,9 @@ public class AccountService {
      */
     @Transactional
     public Account withdraw(AccountNumber accountNumber, Amount amount, String description) {
-
+        if (amount.getValue() > 5000) {
+            throw new IllegalArgumentException("Amount exceeds maximum withdrawal limit");
+        }
         Account account = getAccount(accountNumber);
         Account seccondAccount;
 
@@ -153,7 +155,7 @@ public class AccountService {
         sendNotification(account.getUser(), Notification.NotificationType.WITHDRAWAL,
                 "Withdrawal Confirmation", "Withdrawal of %.2f EUR. New balance: %.2f EUR",
                 "Withdrawal", "Withdrawal of %.2f EUR. New balance: %.2f EUR",
-                amount, account.getBalance()
+                amount.getValue(), account.getBalance()
         );
 
         return savedAccount;
@@ -169,7 +171,7 @@ public class AccountService {
         Account o = getAccount(toAccountNumber);
 
         // Validate same account
-        if (fromAccountNumber.equals(toAccountNumber)) {
+        if (m.getAccountNumber() == o.getAccountNumber()) {
             throw new IllegalArgumentException("Cannot transfer to same account");
         }
 

@@ -1,6 +1,8 @@
 package es.codeurjc.controller;
 
 import es.codeurjc.model.Account;
+import es.codeurjc.model.AccountNumber;
+import es.codeurjc.model.Amount;
 import es.codeurjc.model.User;
 import es.codeurjc.model.Loan;
 import es.codeurjc.model.Transaction;
@@ -54,7 +56,7 @@ public class DashboardController {
     }
     
     @GetMapping("/account/transactions")
-    public String showTransactions(@RequestParam String accountNumber, 
+    public String showTransactions(@RequestParam AccountNumber accountNumber, 
                                    Authentication authentication,
                                    Model model) {
         try {

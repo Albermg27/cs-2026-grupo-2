@@ -16,14 +16,16 @@ public class Amount {
      */
 
     public Amount(double value) {
-        // Regla Tarea 4: No se permiten cantidades negativas
-        if (value < 0) {
-            throw new IllegalArgumentException("La cantidad no puede ser negativa");
+        if (value == 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero");
         }
 
-        // Regla Tarea 4: No se permiten transferencias superiores a 20.000€
+        if (value < 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+
         if (value > 20000) {
-            throw new IllegalArgumentException("La cantidad no puede superar los 20.000€");
+            throw new IllegalArgumentException("Amount exceeds maximum limit of 20,000");
         }
 
         this.value = value;

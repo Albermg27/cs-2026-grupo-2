@@ -18,12 +18,12 @@ public class AccountNumber {
      */
     public AccountNumber(String value) {
         if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("El número de cuenta no puede estar vacío");
+            throw new IllegalArgumentException("Account number cannot be null or empty");
         }
 
         // Validación de formato: Debe empezar por ES seguido de 10 dígitos (según RandomService)
         if (!value.matches("^ES\\d{10}$")) {
-            throw new IllegalArgumentException("Formato de número de cuenta inválido. Debe ser ES seguido de 10 dígitos.");
+            throw new IllegalArgumentException("Invalid account number format. Must be ES followed by 10 digits.");
         }
 
         this.value = value;
