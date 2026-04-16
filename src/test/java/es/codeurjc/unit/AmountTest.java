@@ -26,7 +26,7 @@ public class AmountTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Amount(0.0);
         });
-        assertEquals("Amount must be positive", exception.getMessage());
+        assertEquals("Amount must be greater than zero", exception.getMessage());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class AmountTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Amount(-50.0);
         });
-        assertEquals("La cantidad no puede ser negativa", exception.getMessage());
+        assertEquals("Amount must be positive", exception.getMessage());
     }
 
     @Test
@@ -42,6 +42,7 @@ public class AmountTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Amount(25000.0);
         });
-        assertEquals("La cantidad no puede superar los 20.000€", exception.getMessage());
+        assertEquals("Amount exceeds maximum limit of 20,000", exception.getMessage());
     }
+
 }
