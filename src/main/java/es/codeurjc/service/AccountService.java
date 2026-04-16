@@ -27,12 +27,14 @@ public class AccountService {
     private final EmailNotificationService emailService;
     private final SmsNotificationService smsService;
     private final RandomService randomService;
+    private static final double MAX_DEPOSIT_LIMIT = 10000;
+    private static final double MAX_WITHDRAW_LIMIT = 5000;
 
     public AccountService(AccountRepository accountRepository,
-                          TransactionRepository transactionRepository,
-                          EmailNotificationService emailService,
-                          SmsNotificationService smsService,
-                          RandomService randomService) {
+            TransactionRepository transactionRepository,
+            EmailNotificationService emailService,
+            SmsNotificationService smsService,
+            RandomService randomService) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.emailService = emailService;
@@ -77,7 +79,7 @@ public class AccountService {
      */
     @Transactional
     public Account deposit(AccountNumber accountNumber, Amount amount, String description) {
-        if (amount.getValue() > 10000) {
+        if (amount.getValue() > MAX_DEPOSIT_LIMIT) {
             throw new IllegalArgumentException("Amount exceeds maximum deposit limit");
         }
 
@@ -95,8 +97,7 @@ public class AccountService {
         sendNotification(account.getUser(), Notification.NotificationType.DEPOSIT,
                 "Deposit Confirmation", "Deposit of %.2f EUR. New balance: %.2f EUR",
                 "Deposit Confirmation", "Deposit: %.2f EUR. Balance: %.2f EUR",
-                amount.getValue(), account.getBalance()
-        );
+                amount.getValue(), account.getBalance());
 
         return savedAccount;
     }
@@ -107,7 +108,7 @@ public class AccountService {
     @Transactional
     public Account deposit(AccountNumber accountNumber, Amount amount) {
 
-        if (amount.getValue() > 10000) {
+        if (amount.getValue() > MAX_DEPOSIT_LIMIT) {
             throw new IllegalArgumentException("Amount exceeds maximum deposit limit");
         }
 
@@ -125,8 +126,7 @@ public class AccountService {
         sendNotification(account.getUser(), Notification.NotificationType.DEPOSIT,
                 "Deposit Confirmation", "Deposit of %.2f EUR. New balance: %.2f EUR",
                 "Deposit Confirmation", "Deposit: %.2f EUR. Balance: %.2f EUR",
-                amount.getValue(), account.getBalance()
-        );
+                amount.getValue(), account.getBalance());
 
         return savedAccount;
     }
@@ -136,11 +136,10 @@ public class AccountService {
      */
     @Transactional
     public Account withdraw(AccountNumber accountNumber, Amount amount, String description) {
-        if (amount.getValue() > 5000) {
+        if (amount.getValue() > MAX_WITHDRAW_LIMIT) {
             throw new IllegalArgumentException("Amount exceeds maximum withdrawal limit");
         }
         Account account = getAccount(accountNumber);
-        Account seccondAccount;
 
         account.withdraw(amount.getValue());
 
@@ -155,8 +154,7 @@ public class AccountService {
         sendNotification(account.getUser(), Notification.NotificationType.WITHDRAWAL,
                 "Withdrawal Confirmation", "Withdrawal of %.2f EUR. New balance: %.2f EUR",
                 "Withdrawal", "Withdrawal of %.2f EUR. New balance: %.2f EUR",
-                amount.getValue(), account.getBalance()
-        );
+                amount.getValue(), account.getBalance());
 
         return savedAccount;
     }
@@ -171,7 +169,7 @@ public class AccountService {
         Account o = getAccount(toAccountNumber);
 
         // Validate same account
-        if (m.equals(o)) {
+        if (m.getAccountNumber().equals(o.getAccountNumber())) {
             throw new IllegalArgumentException("Cannot transfer to same account");
         }
 
@@ -201,15 +199,13 @@ public class AccountService {
         sendNotification(m.getUser(), Notification.NotificationType.TRANSFER,
                 "Transfer Sent", "Transfer of %.2f EUR to %s. New balance: %.2f EUR",
                 "Transfer Sent", "Transfer of %.2f EUR to %s. New balance: %.2f EUR",
-                amount.getValue(), toAccountNumber, m.getBalance()
-        );
+                amount.getValue(), toAccountNumber, m.getBalance());
 
         // Notification to the recipient
         sendNotification(o.getUser(), Notification.NotificationType.TRANSFER,
                 "Transfer Received", "Transfer of %.2f EUR from %s. New balance: %.2f EUR",
                 "Transfer Received", "Transfer of %.2f EUR from %s. New balance: %.2f EUR",
-                amount.getValue(), fromAccountNumber, o.getBalance()
-        );
+                amount.getValue(), fromAccountNumber, o.getBalance());
     }
 
     /**
@@ -245,7 +241,7 @@ public class AccountService {
      * Send notification
      */
     private void sendNotification(User user, Notification.NotificationType type, String emailSubject,
-                                  String emailFormat, String smsSubject, String smsFormat, Object... args) {
+            String emailFormat, String smsSubject, String smsFormat, Object... args) {
         User.NotificationType notifType = user.getNotificationType();
         if (notifType == User.NotificationType.EMAIL) {
             emailService.sendNotification(user, type, emailSubject, String.format(emailFormat, args));

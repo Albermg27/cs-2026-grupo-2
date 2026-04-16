@@ -56,6 +56,8 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Problema:** "Código muerto" que genera ruido visual y confusión sobre la intención del programador.
     * **Cómo solucionarlo:** Eliminar la línea 185.
 
+* **Refactorización realizada:** Para solucionar este bad smell se ha eliminado la variable `seccondAccount`, ya que no era utilizada en ninguna parte del método.
+
 ### Bad Smell 3: Comparación de Strings con operador de identidad (`==`)
 * **Ubicación:** `AccountService.java` - Línea `235`
 * **Reporte de la issue:**
@@ -68,6 +70,10 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Descripción:** Uso de `==` para comparar el contenido de dos objetos de tipo String.
     * **Problema:** `==` compara referencias de memoria, no el valor. En lógica bancaria, esto puede causar que dos cuentas iguales no se reconozcan como tales.
     * **Cómo solucionarlo:** Usar el método `.equals()`.
+
+* **Refactorización realizada:** Para solucionar este bad smell se ha sustituido la comparación con `==` por el método `.equals()`, asegurando que la comparación entre números de cuenta se realiza por valor y no por referencia.
+
+![Código comparación correcta](img/Compare-Strings-sol.png)
 
 
 
@@ -147,6 +153,10 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Problema:** Existe un grupo de datos que "siempre van juntos" pero no han sido encapsulados en un objeto propio. Esto aumenta la complejidad de las firmas de los métodos y dificulta la reutilización de la lógica de notificación. Es un indicador de que falta una abstracción (como una clase `Notification Request`).
 
     * **Cómo solucionarlo:** El problema se puede solucionar creando un objeto de datos (Data Object) o un *Record* que agrupe estos campos. De esta manera, en lugar de pasar cuatro parámetros independientes, los métodos recibirían un único objeto de configuración de notificación.
+    * **Refactorización realizada:** Para solucionar este bad smell se ha extraído la lógica de notificación a un único método privado llamado `sendNotification`.
+
+    ![Data Clumps](img/data-clumps-sol.png)
+
 
 ### Bad Smell 6: Magic Numbers (Números Mágicos)
 * **Ubicación:** `AccountService.java` - Métodos `deposit` (Líneas 77-89) y `withdraw` (Líneas 176-182).
@@ -161,6 +171,10 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Problema:** Un desarrollador externo no puede saber si estos límites responden a una lógica de negocio, a una restricción técnica o a una normativa legal. Al estar "hard-coded", si el banco decide cambiar estos límites, hay que buscarlos y reemplazarlos manualmente en todo el código, lo que facilita la aparición de errores.
 
     * **Cómo solucionarlo:** La solución consiste en extraer estos valores a constantes con nombres descriptivos (por ejemplo, `MAX_DEPOSIT_THRESHOLD` o `DAILY_WITHDRAWAL_LIMIT`). Esto centraliza la configuración en un solo lugar y hace que el código sea autodocumentado.
+
+    * **Refactorización realizada:** Para solucionar este bad smell se han extraído los valores numéricos a constantes privadas dentro de la clase (`MAX_DEPOSIT_LIMIT`, `MAX_WITHDRAW_LIMIT`). Esto mejora la legibilidad del código, centraliza la configuración de negocio y facilita su mantenimiento en caso de cambios en las reglas bancarias.
+
+    ![Magic Numbers](img/magic_numbers_sol.png)
 
 
 
