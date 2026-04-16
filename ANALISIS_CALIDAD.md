@@ -163,22 +163,34 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Cómo solucionarlo:** La solución consiste en extraer estos valores a constantes con nombres descriptivos (por ejemplo, `MAX_DEPOSIT_THRESHOLD` o `DAILY_WITHDRAWAL_LIMIT`). Esto centraliza la configuración en un solo lugar y hace que el código sea autodocumentado.
 
 
+
 ### Bad Smell 7: Switch Statement (Sentencias Condicionales Complejas)
 * **Ubicación:** `AccountService.java` - Dentro de los métodos `deposit`, `withdraw` y `transfer` - Líneas 103, 110, 152, 159, 202, 208, 267 y 273
 
 * **Reporte de la issue:**
-  
-<img width="600" height="807" alt="image" src="https://github.com/user-attachments/assets/4b360d4f-529d-4901-ab9f-5d958ecf35c2">
-<img width="600" height="836" alt="image" src="https://github.com/user-attachments/assets/79de44b7-513e-41ee-b823-0f6af2430458">
-<img width="600" height="715" alt="image" src="https://github.com/user-attachments/assets/4b55ab82-f548-46d5-9a30-f9011db17b59">
-<img width="600" height="678" alt="image" src="https://github.com/user-attachments/assets/bd310429-d3eb-4758-b3b2-1d94e43d9dd6">
+
+  <img width="600" height="807" alt="image" src="https://github.com/user-attachments/assets/4b360d4f-529d-4901-ab9f-5d958ecf35c2" />
+  <img width="600" height="836" alt="image" src="https://github.com/user-attachments/assets/79de44b7-513e-41ee-b823-0f6af2430458" />
+  <img width="600" height="715" alt="image" src="https://github.com/user-attachments/assets/4b55ab82-f548-46d5-9a30-f9011db17b59" />
+  <img width="600" height="678" alt="image" src="https://github.com/user-attachments/assets/bd310429-d3eb-4758-b3b2-1d94e43d9dd6" />
 
 * **Explicación del mal olor:**
 
-    * **Descripción:** Se repite constantemente la estructura if (notifType == User.NotificationType.EMAIL) { … } else if (notifType == User.NotificationType.SMS) { … }. Cada vez que se añada un nuevo canal de notificación (como notificaciones push) habrá que buscar y modificar todos estos bloques en toda la clase, aumentando el riesgo de introducir errores y dificultando el mantenimiento de la aplicación.
-    * **Problema:** Es una violación del polimorfismo, el servicio asume la responsabilidad de cómo notificar basándose en el tipo de usuario.
-    * **Cómo solucionarlo:** Eliminar la responsabilidad de decidir cómo enviar del AccountService y delegarla a los propios servicios de notificación mediante una interfaz común.
-  
+  * **Descripción:** Se repite constantemente la estructura if (notifType == User.NotificationType.EMAIL) { … } else if (notifType == User.NotificationType.SMS) { … }. Cada vez que se añada un nuevo canal de notificación (como notificaciones push) habrá que buscar y modificar todos estos bloques en toda la clase, aumentando el riesgo de introducir errores y dificultando el mantenimiento de la aplicación.
+  * **Problema:** Es una violación del polimorfismo, el servicio asume la responsabilidad de cómo notificar basándose en el tipo de usuario.
+  * **Cómo solucionarlo:** Eliminar la responsabilidad de decidir cómo enviar del AccountService y delegarla a los propios servicios de notificación mediante una interfaz común.
+
+* **Refactorización realizada:**
+
+  Para solucionar este bad smell se ha extraído la lógica de notificación a un único método privado llamado `sendNotification`. Mediante el uso de argumentos variables y plantillas de formato, se ha logrado que los métodos se desentiendan de la logística de envío. Esto no solo elimina la duplicación de código, sino que también corrige la violación del polimorfismo al centralizar la toma de decisiones, permitiendo que cada operación defina sus propios textos y asuntos de forma independiente para cada canal (EMAIL o SMS) sin ensuciar el flujo principal del servicio.
+
+   <img width="600" height="180" alt="image" src="https://github.com/user-attachments/assets/72edd645-01e9-4641-9dc0-b1097ea5f679" />
+   <img width="600" height="119" alt="image" src="https://github.com/user-attachments/assets/81872752-e753-41c3-9155-7f195bc08663" />
+   <img width="600" height="120" alt="image" src="https://github.com/user-attachments/assets/14478ff6-46ed-4cba-81a6-287fb4184ffd" />
+   <img width="600" height="252" alt="image" src="https://github.com/user-attachments/assets/a13067e0-856e-455e-bc6e-1e342d973113" />
+
+
+
 ### Bad Smell 8: Primitive Obsession (Obsesión por los Primitivos)
 * **Ubicación:** `AccountService.java` - Uso general de `double amount` y `String accountNumber`.
 * **Reporte de la issue:**
