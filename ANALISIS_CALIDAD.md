@@ -217,18 +217,27 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
     * **Cómo solucionarlo:** Aplicar el principio **"Tell, Don't Ask"** (Dile, no preguntes). Se debe mover la lógica de validación a la clase `Account`. El servicio simplemente debe invocar el método de retirada en la entidad, y que sea la propia cuenta la que valide su capacidad de pago y lance la excepción si no puede cumplir la operación.
  
 
+
 ### Bad Smell 10: Inappropriate Intimacy (Intimidad Inapropiada)
 * **Ubicación:** `AccountService.java` - Método `transfer` - Línea 235
 
 * **Reporte de la issue:**
   
-<img width="600" height="363" alt="image" src="https://github.com/user-attachments/assets/3a4b93ae-10cd-456d-ae1c-07a30e360d83" />
+  <img width="600" height="363" alt="image" src="https://github.com/user-attachments/assets/3a4b93ae-10cd-456d-ae1c-07a30e360d83" />
 
 * **Explicación del mal olor:**
 
     * **Descripción:** Para evitar transferencias a la misma cuenta, el servicio obtiene los números de cuenta de ambos objetos (m y o) y los compara directamente: if (m.getAccountNumber() == o.getAccountNumber()).
     * **Problema:** Violación del encapsulamiento, el servicio demuestra un conocimiento excesivo sobre la estructura interna de la entidad Account. En general no se deben pedir datos a un objeto para tomar decisiones por él, sino pedirle al objeto que tome la decisión.
     * **Cómo solucionarlo:** En lugar de pedirle datos a los objetos para compararlos fuera, le pides al objeto que realice la comparación internamente. En la clase Account se debería implementar un método equals() adecuado o un método de conveniencia como isSameAccountAs(Account other) y en el AccountService habría que sustituir la comparación de atributos por una llamada al método del objeto.
+
+* **Refactorización realizada:**
+
+  Para solucionar este bad smell se ha eliminado la comparación directa de los atributos internos de las entidades desde el servicio. En lugar de que `AccountService` extraiga los números de cuenta para compararlos mediante m.getAccountNumber() == o.getAccountNumber(), he delegado esta responsabilidad a la entidad `Account` implementando correctamente el método `equals()`. De esta forma, el servicio ahora simplemente invoca m.equals(o), respetando el encapsulamiento y reduciendo el acoplamiento.
+
+  <img width="600" height="84" alt="image" src="https://github.com/user-attachments/assets/114c7765-3dc1-4a41-8272-9857ee4df159" />
+
+
 
 ### Bad Smell 11: Dead Code (Código muerto)
 * **Ubicación:** `AccountService.java` - Método `deposit` - Líneas 87-89
