@@ -80,7 +80,7 @@ public class AccountService {
         if (amount.getValue() > 10000) {
             throw new IllegalArgumentException("Amount exceeds maximum deposit limit");
         }
-       
+
         Account account = getAccount(new AccountNumber(accountNumber.getValue()));
         account.deposit(amount.getValue());
 
@@ -166,12 +166,12 @@ public class AccountService {
      */
     @Transactional
     public void transfer(AccountNumber fromAccountNumber, AccountNumber toAccountNumber, Amount amount) {
-        
+
         Account m = getAccount(fromAccountNumber);
         Account o = getAccount(toAccountNumber);
 
         // Validate same account
-        if (m.getAccountNumber() == o.getAccountNumber()) {
+        if (m.equals(o)) {
             throw new IllegalArgumentException("Cannot transfer to same account");
         }
 
