@@ -125,4 +125,43 @@ public class TransferE2ETest {
 
     }
 
+    @Test
+    public void testTransferInsufficientFunds() {
+        // Log in to the application
+        driver.get("http://localhost:" + port + "/login");
+        driver.findElement(By.id("username")).sendKeys(testUsername);
+        driver.findElement(By.id("password")).sendKeys(testPassword);
+        driver.findElement(By.id("loginButton")).click();
+
+        // Navigate to the transfer page
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement transferLink = wait.until(presenceOfElementLocated(By.cssSelector("a[href='/transfer']")));
+        transferLink.click();
+
+        // Fill the transfer form with an amount greater than the balance
+        WebElement fromAccountElement = wait.until(presenceOfElementLocated(By.id("fromAccount")));
+        Select fromAccountDropdown = new Select(fromAccountElement);
+        fromAccountDropdown.selectByValue("ES9999999991");
+
+        driver.findElement(By.id("toAccount")).sendKeys("ES9999999992");
+        driver.findElement(By.id("amount")).sendKeys("1500");
+
+        // Submit the transfer
+        driver.findElement(By.id("transferButton")).click();
+
+        // Verify error message is displayed
+        WebElement errorMessage = wait.until(
+                presenceOfElementLocated(By.cssSelector(".alert.alert-danger")));
+
+        assertTrue(errorMessage.getText().contains("Insufficient funds"),
+                "The error message should indicate insufficient funds");
+
+        // Verify balances have NOT changed in the database
+        Account accountSource = accountRepository.findByAccountNumber("ES9999999991").get();
+        Account accountDest = accountRepository.findByAccountNumber("ES9999999992").get();
+
+        assertEquals(1000.0, accountSource.getBalance(), "Source balance should remain unchanged");
+        assertEquals(0.0, accountDest.getBalance(), "Destination balance should remain unchanged");
+    }
+
 }
