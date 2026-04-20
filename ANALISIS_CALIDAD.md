@@ -130,6 +130,10 @@ A continuación, se detallan los problemas detectados en la clase `AccountServic
    - Un `NotificationService` para gestionar el envío de notificaciones (email o SMS).
    
    De esta forma se mejora la modularidad del sistema, se facilita el mantenimiento del código y se respeta el principio de responsabilidad única.
+
+  * **Refactorización realizada:** La refactorización de este bad smell se ha abordado de forma progresiva y transversal mediante la resolución del resto de bad smells detectados en la clase.
+   En lugar de realizar una división agresiva de la clase en múltiples servicios (como podría ser la creación de un `TransactionService` independiente), se optó por una estrategia conservadora orientada a reducir responsabilidades sin romper la arquitectura ni los tests existente. Gracias a las refactorizaciones realizadas la clase `AccountService` ha reducido significativamente su tamaño y complejidad.
+
      
 ### Bad Smell 4: Método demasiado largo (transfer)
 * **Ubicación:** `AccountService.java` - Método `transfer(String, String, double)`
