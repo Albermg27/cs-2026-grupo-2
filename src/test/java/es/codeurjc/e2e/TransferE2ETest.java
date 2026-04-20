@@ -311,4 +311,37 @@ public class TransferE2ETest {
         assertEquals(700.0, targetAcc.getBalance());
     }
 
+    @Test
+    public void testTransferToSameAccountFails() {
+        // Log in 
+        driver.get("http://localhost:" + port + "/login");
+        driver.findElement(By.id("username")).sendKeys(testUsername);
+        driver.findElement(By.id("password")).sendKeys(testPassword);
+        driver.findElement(By.id("loginButton")).click();
+
+        // Navigate to the transfer page
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement transferLink = wait.until(presenceOfElementLocated(By.cssSelector("a[href='/transfer']")));
+        transferLink.click();
+
+        // Attempt transfer to the same account
+        String sameAccountNumber = "ES9999999991";
+        WebElement fromAccountElement = wait.until(presenceOfElementLocated(By.id("fromAccount")));
+        new Select(fromAccountElement).selectByValue(sameAccountNumber);
+
+        driver.findElement(By.id("toAccount")).sendKeys(sameAccountNumber);
+        driver.findElement(By.id("amount")).sendKeys("100");
+
+        // Submit transfer
+        driver.findElement(By.id("transferButton")).click();
+
+        // Verify an error message is displayed
+        WebElement errorBox = wait.until(presenceOfElementLocated(By.cssSelector(".alert.alert-danger")));
+        assertFalse(errorBox.getText().isEmpty(), "An error message should be displayed for same account transfer");
+
+        // Verify database integrity: balance must remain unchanged
+        Account account = accountRepository.findByAccountNumber(sameAccountNumber).get();
+        assertEquals(1000.0, account.getBalance(), "Source balance should remain unchanged");
+    }
+
 }
