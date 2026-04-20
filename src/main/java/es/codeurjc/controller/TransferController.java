@@ -3,6 +3,7 @@ package es.codeurjc.controller;
 import es.codeurjc.model.Account;
 import es.codeurjc.model.AccountNumber;
 import es.codeurjc.model.Amount;
+import es.codeurjc.model.AmountDTO;
 import es.codeurjc.model.User;
 import es.codeurjc.service.AccountService;
 import es.codeurjc.service.UserService;
@@ -51,10 +52,11 @@ public class TransferController {
     @PostMapping("/transfer")
     public String performTransfer(@RequestParam AccountNumber fromAccount,
                                   @RequestParam AccountNumber toAccount,
-                                  @RequestParam Amount amount,
+                                  @RequestParam AmountDTO amount,
                                   RedirectAttributes redirectAttributes) {
         try {
-            accountService.transfer(fromAccount, toAccount, amount);
+            Amount validatedAmount = amount.toAmount();
+            accountService.transfer(fromAccount, toAccount, validatedAmount);
             redirectAttributes.addFlashAttribute("success", 
                 "Transfer completed successfully");
             return "redirect:/dashboard";

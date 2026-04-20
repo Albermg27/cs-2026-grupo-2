@@ -22,6 +22,7 @@ import es.codeurjc.BankingApplication;
 import es.codeurjc.model.Account;
 import es.codeurjc.model.User;
 import es.codeurjc.repository.AccountRepository;
+import es.codeurjc.repository.NotificationRepository;
 import es.codeurjc.repository.UserRepository;
 
 import java.time.Duration;
@@ -45,11 +46,15 @@ public class TransferE2ETest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     private String testUsername = "test_user";
     private String testPassword = "testingPass123";
 
     @BeforeEach
     public void setupTest() {
+        notificationRepository.deleteAll();
         accountRepository.deleteAll();
         userRepository.deleteAll();
 
@@ -165,6 +170,57 @@ public class TransferE2ETest {
 
         assertEquals(1000.0, accountSource.getBalance(), "Source balance should remain unchanged");
         assertEquals(0.0, accountDest.getBalance(), "Destination balance should remain unchanged");
+    }
+
+    @Test
+    public void testTransferNegativeAmount() {
+
+        // Log in to the application
+        driver.get("http://localhost:" + port + "/login");
+        driver.findElement(By.id("username")).sendKeys(testUsername);
+        driver.findElement(By.id("password")).sendKeys(testPassword);
+        driver.findElement(By.id("loginButton")).click();
+
+        // Navigate to the transfer page
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement transferLink = wait.until(
+                presenceOfElementLocated(By.cssSelector("a[href='/transfer']")));
+        transferLink.click();
+
+        // Fill the transfer form with a NEGATIVE amount
+        WebElement fromAccountElement = wait.until(
+                presenceOfElementLocated(By.id("fromAccount")));
+
+        Select fromAccountDropdown = new Select(fromAccountElement);
+        fromAccountDropdown.selectByValue("ES9999999991");
+
+        driver.findElement(By.id("toAccount")).sendKeys("ES9999999992");
+        driver.findElement(By.id("amount")).sendKeys("-100");
+
+        // Submit the transfer
+        driver.findElement(By.id("transferButton")).click();
+
+        // Verify error message is displayed
+        WebElement errorMessage = wait.until(
+                presenceOfElementLocated(By.cssSelector(".alert.alert-danger")));
+
+        assertTrue(errorMessage.getText().contains("Amount must be positive"),
+                "The error message should indicate Amount must be positive");
+
+
+        // Verify balances have NOT changed in the database
+        Account accountSource =
+                accountRepository.findByAccountNumber("ES9999999991").get();
+
+        Account accountDest =
+                accountRepository.findByAccountNumber("ES9999999992").get();
+
+        assertEquals(1000.0, accountSource.getBalance(),
+                "Source balance should remain unchanged");
+
+        assertEquals(0.0, accountDest.getBalance(),
+                "Destination balance should remain unchanged");
     }
 
 }
