@@ -22,8 +22,8 @@ import es.codeurjc.BankingApplication;
 import es.codeurjc.model.Account;
 import es.codeurjc.model.User;
 import es.codeurjc.repository.AccountRepository;
-import es.codeurjc.repository.NotificationRepository;
 import es.codeurjc.repository.UserRepository;
+import es.codeurjc.repository.NotificationRepository;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -44,13 +44,16 @@ public class TransferE2ETest {
     private AccountRepository accountRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private NotificationRepository notificationRepository; // AGREGADO POR TI
 
     @Autowired
-    private NotificationRepository notificationRepository;
+    private PasswordEncoder passwordEncoder;
 
     private String testUsername = "test_user";
     private String testPassword = "testingPass123";
+
+    private String userBName = "user_b";
+    private String userBPass = "passB123";
 
     @BeforeEach
     public void setupTest() {
@@ -82,6 +85,17 @@ public class TransferE2ETest {
         Account account2 = new Account("ES9999999992", Account.AccountType.SAVINGS, 0.0);
         account2.setUser(testUser);
         accountRepository.save(account2);
+
+        // Create test user B
+        User userB = new User(userBName, passwordEncoder.encode(userBPass), "CUSTOMER");
+        userB.setDni("88888888X");
+        userB.setEmail("userB@test.com");
+        userB = userRepository.save(userB);
+
+        // Create account for user B
+        Account accountB = new Account("ES0000000000", Account.AccountType.CHECKING, 500.0);
+        accountB.setUser(userB);
+        accountRepository.save(accountB);
     }
 
     @AfterEach
@@ -263,6 +277,38 @@ public class TransferE2ETest {
 
         assertEquals(1000.0, accountSource.getBalance(), "Source balance should remain unchanged");
         assertEquals(0.0, accountDest.getBalance(), "Destination balance should remain unchanged");
+    }
+
+    @Test
+    public void testTransferToDifferentUserSuccess() {
+        // Log in
+        driver.get("http://localhost:" + port + "/login");
+        driver.findElement(By.id("username")).sendKeys(testUsername);
+        driver.findElement(By.id("password")).sendKeys(testPassword);
+        driver.findElement(By.id("loginButton")).click();
+
+        // Navigate to the transfer page
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(presenceOfElementLocated(By.cssSelector("a[href='/transfer']"))).click();
+
+        // Source: User A Account | Destination: User B Account
+        WebElement fromAccountElement = wait.until(presenceOfElementLocated(By.id("fromAccount")));
+        new Select(fromAccountElement).selectByValue("ES9999999991");
+
+        driver.findElement(By.id("toAccount")).sendKeys("ES0000000000"); 
+        driver.findElement(By.id("amount")).sendKeys("200");
+        driver.findElement(By.id("transferButton")).click();
+
+        // Verify success message
+        WebElement successMessage = wait.until(presenceOfElementLocated(By.cssSelector(".alert.alert-success")));
+        assertTrue(successMessage.getText().contains("Transfer completed successfully"));
+
+        // Verify balances in the database (Both are required by Task 5)
+        Account sourceAcc = accountRepository.findByAccountNumber("ES9999999991").get();
+        Account targetAcc = accountRepository.findByAccountNumber("ES0000000000").get();
+
+        assertEquals(800.0, sourceAcc.getBalance());
+        assertEquals(700.0, targetAcc.getBalance());
     }
 
 }
