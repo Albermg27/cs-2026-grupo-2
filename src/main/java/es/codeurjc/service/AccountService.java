@@ -231,6 +231,9 @@ public class AccountService {
         }
     }
 
+    /**
+     * Validate amount
+     */
     private void validateAmount(Amount amount, double max, String message){
         if (amount.getValue() > max) {
             throw new IllegalArgumentException("Amount exceeds maximum "+ message +" limit");
