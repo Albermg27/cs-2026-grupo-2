@@ -108,6 +108,17 @@ Para esta práctica he realizado las siguientes tareas: crear la estructura inic
 |3| [Refactorizar bad smells: literales duplicados, código duplicado (deposit) y método grande (transfer)](https://github.com/Albermg27/cs-2026-grupo-2/commit/d1a2f1e637796a3de2a0cecb03de51e421af9c94)  |
 |4| [Test E2E: Transferencia entre cuentas propias y estructura inicial TransferE2ETest](https://github.com/Albermg27/cs-2026-grupo-2/commit/9d28324185aa76ad39c33fb152a333c150da58c0)  |
 
+#### **Alumno 5 - Alberto Mayoral Gómez**
+
+Para esta práctica he añadido nuevas pruebas unitarias y test E2E, además de participar en la refactorización de varios bad smells y en la documentación del análisis de calidad. En concreto, he desarrollado los tests unitarios del método rm(String accountNumber), he realizado la refactorización del bad smell Mysterious Names / Non-Descriptive Names, he actualizado la documentación del bad smell Large Class en el fichero ANALISIS_CALIDAD.md y he implementado una prueba E2E que verifica que no se puede realizar una transferencia si la cantidad es negativa.
+
+| Nº | Commits      |
+|:--:|:------------:|
+| 1  | [Tests Unitario: rm(String accountNumber)](https://github.com/Albermg27/cs-2026-grupo-2/commit/fbf5a89bac0db953140e6883828a344cb32dbf82)  |
+| 2  | [Bad smell: Mysterious Names / Non-Descriptive Names refactor](https://github.com/Albermg27/cs-2026-grupo-2/commit/ada60f3d966fe5e032dbe4ce4be5bb0879ee8a22)  |
+| 3  | [Bad smell: Large Class](https://github.com/Albermg27/cs-2026-grupo-2/commit/e6e3bc92378068f875fce8954590d9c9c0651d3b)  |
+| 4  | [E2E test: "No se puede realizar una transferencia si la cantidad es negativa"](https://github.com/Albermg27/cs-2026-grupo-2/commit/d8b38f04ff1011339957040379e4071f87d476b6)  |
+
 
 #### **Alumno 6 - Icíar Moreno López**
 
