@@ -131,7 +131,7 @@ public class AccountServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             accountService.deposit(accountNumber, new Amount(0.0), "Test deposit");
         });
-        assertEquals("Amount must be greater than zero", exception.getMessage());
+        assertEquals("Amount must be positive", exception.getMessage());
     }
 
     @Test
@@ -447,7 +447,7 @@ public class AccountServiceTest {
         IllegalArgumentException exceptionZero = assertThrows(IllegalArgumentException.class, () -> {
             accountService.withdraw(accountNumber, new Amount(0.0), "Compra");
         });
-        assertEquals("Amount must be greater than zero", exceptionZero.getMessage());
+        assertEquals("Amount must be positive", exceptionZero.getMessage());
 
         // When & then
         IllegalArgumentException exceptionNegative = assertThrows(IllegalArgumentException.class, () -> {
@@ -556,7 +556,7 @@ public class AccountServiceTest {
     // negative, or greater than 20000
     @ParameterizedTest(name = "Cantidad {0} debe lanzar error: {1}")
     @CsvSource({
-            "0.0, 'Amount must be greater than zero'",
+            "0.0, 'Amount must be positive'",
             "-1.0, 'Amount must be positive'",
             "30000.0, 'Amount exceeds maximum limit of 20,000'"
     })

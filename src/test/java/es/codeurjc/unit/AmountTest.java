@@ -26,7 +26,7 @@ public class AmountTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Amount(0.0);
         });
-        assertEquals("Amount must be greater than zero", exception.getMessage());
+        assertEquals("Amount must be positive", exception.getMessage());
     }
 
     @Test

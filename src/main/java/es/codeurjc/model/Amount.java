@@ -16,11 +16,7 @@ public class Amount {
      *                                  20.000€.
      */
     public Amount(double value) {
-        if (value == 0) {
-            throw new IllegalArgumentException("Amount must be greater than zero");
-        }
-
-        if (value < 0) {
+        if (value <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
         }
 
