@@ -118,6 +118,19 @@ Para esta práctica he realizado las siguientes tareas: implementación de los t
 |2| [Refactorización de bad smells: variable no usada, comparación de Strings y Magic Numbers](https://github.com/Albermg27/cs-2026-grupo-2/commit/0dcda605afd0440f266b9c31b754dd134168125c) |
 |3| [Test E2E: Transferencia entre cuentas de distintos usuarios](https://github.com/Albermg27/cs-2026-grupo-2/commit/87e3a628f953a2541a9154c4b692ba9fd3a73633) |
 
+#### **Alumno 3 - Jorge Padilla Rodríguez**
+
+En esta práctica he implementado los tests unitarios necesarios para cubrir la totalidad del código del método `transfer`, entre los que se encuentran los tests parametrizados `transfer_invalidAmounts_throwsException`, `transfer_accountNotFound_throwsException`, y `transfer_validParametersAndSuccess_allNotificationScenarios`, así como el resto de tests relacionados con este método. De la misma manera, he realizado las refactorizaciones necesarias para los Bad Smells 11, 12, 13 y 14, así como la explicación de estos en el fichero ANALISIS_CALIDAD.md. Posteriormente, he implementado la prueba automática de sistema que verifica que no se puede realizar una transferencia si la cantidad supera los 20.000€. Mencionar también la incorporación en el pom.xml del plugin de JACOCO necesario para comprobar la cobertura del código.
+
+| Nº    | Commits      |
+|:------------: |:------------:|
+|1| [Plugin de JACOCO](https://github.com/Albermg27/cs-2026-grupo-2/commit/7fd945d291e8f504d8ce9b5ecc73d2906455ed54) |
+|2| [Tests unitarios para el método transfer](https://github.com/Albermg27/cs-2026-grupo-2/commit/8ee22373a6f20f4733713c7ecd1cb643e63f9d79) |
+|3| [Refactorización de Bad Smells 13 y 14](https://github.com/Albermg27/cs-2026-grupo-2/commit/edb18031bc2a418fb16a866ad5d4248a2666796c) |
+|4| [Refactorización de Bad Smell 12](https://github.com/Albermg27/cs-2026-grupo-2/commit/f41eedf5702d6d49e13ca2fe43dd72936d378e31) |
+|5| [Test E2E: "No se puede realizar una transferencia si la cantidad supera los 20.000€"](https://github.com/Albermg27/cs-2026-grupo-2/commit/a54a0040011033f7ccea08e026573c625d63c655)  |
+
+
 #### **Alumno 5 - Alberto Mayoral Gómez**
 
 Para esta práctica he añadido nuevas pruebas unitarias y test E2E, además de participar en la refactorización de varios bad smells y en la documentación del análisis de calidad. En concreto, he desarrollado los tests unitarios del método rm(String accountNumber), he realizado la refactorización del bad smell Mysterious Names / Non-Descriptive Names, he actualizado la documentación del bad smell Large Class en el fichero ANALISIS_CALIDAD.md y he implementado una prueba E2E que verifica que no se puede realizar una transferencia si la cantidad es negativa.
