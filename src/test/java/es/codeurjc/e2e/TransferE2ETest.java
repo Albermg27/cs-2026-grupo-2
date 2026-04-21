@@ -343,5 +343,35 @@ public class TransferE2ETest {
         Account account = accountRepository.findByAccountNumber(sameAccountNumber).get();
         assertEquals(1000.0, account.getBalance(), "Source balance should remain unchanged");
     }
+    @Test
+    public void testTransferToNonExistentAccountFails() {
+        // Log in
+        driver.get("http://localhost:" + port + "/login");
+        driver.findElement(By.id("username")).sendKeys(testUsername);
+        driver.findElement(By.id("password")).sendKeys(testPassword);
+        driver.findElement(By.id("loginButton")).click();
+
+        // Navigate to transfer page
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(presenceOfElementLocated(By.cssSelector("a[href='/transfer']"))).click();
+
+        // Fill form with a non-existent destination account
+        WebElement fromAccountElement = wait.until(presenceOfElementLocated(By.id("fromAccount")));
+        new Select(fromAccountElement).selectByValue("ES9999999991");
+
+        driver.findElement(By.id("toAccount")).sendKeys("ES1111111111"); // does not exist
+        driver.findElement(By.id("amount")).sendKeys("100");
+        driver.findElement(By.id("transferButton")).click();
+
+        // Verify error message is displayed
+        WebElement errorMessage = wait.until(
+                presenceOfElementLocated(By.cssSelector(".alert.alert-danger")));
+        assertFalse(errorMessage.getText().isEmpty(),
+                "An error message should be displayed when the destination account does not exist");
+
+        // Verify source balance has NOT changed
+        Account sourceAcc = accountRepository.findByAccountNumber("ES9999999991").get();
+        assertEquals(1000.0, sourceAcc.getBalance(), "Source balance should remain unchanged");
+        }
 
 }
