@@ -168,3 +168,44 @@ He realizado las pruebas unitarias para asegurar que el proceso de sacar dinero 
 
 
 ---
+
+# Praćtica 2 - Implementación de pipelines de CI-CD y desarrollo colaborativo 
+
+
+### Captura de la aplicación desplegada en Azure
+> Inserta aquí una captura dela aplicación desplegada. Debe aparecer la URL de la aplicación desplegada y el número de versión desplegada (pantalla de login)
+
+![Captura Aplicación en Azure](URL_captura_dashboard_azure)
+
+
+### Captura del dashboard de Azure con la última versión desplegada
+> Inserta aquí una captura del dashboard de Azure. La captura debe mostrar lo mismo que aparece en la diapositiva 26 de "Anexo -Despliegue de aplicaciones en Azure"
+
+
+## Desarrollo con GitHubFlow
+
+### Asignación de tareas
+
+| Tarea | Alumno/es asignado/s | Commits asociado |
+|:--- |:--- |:--- |
+| feature-1 | [Nombre 1], [Nombre 2] | [Commit 1](URL_commit_1), [Commit 2](URL_commit_2) |
+| feature-2 | [Nombre 3], [Nombre 4] | [Commit 3](URL_commit_3), [Commit 4](URL_commit_4) |
+| refactoring-1 | [Nombre 5] | [Commit 5](URL_commit_5) ... |
+
+### Pasos seguidos
+
+Una vez creados los workflows y funcionando estos, pasamos a crear la nueva funcionalidad utilizando GithubFlow:
+
+Clonamos el repositorio
+
+```
+$ git clone git@github.com:codigus-formacion-se/banking-app-2026.git
+```
+
+> Inserta aquí todos los comandos que has utilizado para crear la rama, implementar la funcionalidad, hacer el commit y push a GitHub, crear el pull request y hacer el merge a main. Acompaña cada comando con una breve explicación de lo que has hecho.
+
+## Workflow 4
+
+Todos los días a las XX:XX se ejecuta el job de Nightly que ...
+
+- [ÚLTIMA EJECUCIÓN](URL_ultima_ejecucion_workflow_4)
