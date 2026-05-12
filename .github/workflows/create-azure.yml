@@ -1,0 +1,47 @@
+name: Create & Deploy Azure Container App
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Az CLI login'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Create Container Apps Environment'
+        run: |
+          # Create the Container Apps environment if it doesn't exist
+          az containerapp env create \
+            --name ${{ secrets.AZURE_CONTAINER_ENV }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --location ${{ secrets.AZURE_LOCATION }} || true
+
+      - name: 'Create and deploy Container App'
+        run: |
+          az containerapp create \
+            --name banking-app \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --environment ${{ secrets.AZURE_CONTAINER_ENV }} \
+            --image ${{ secrets.DOCKERHUB_USERNAME }}/banking-app:latest \
+            --target-port 8080 \
+            --ingress external \
+            --min-replicas 1 \
+            --max-replicas 1
+
+      - name: 'Show application URL'
+        run: |
+          az containerapp show \
+            --name banking-app \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --query properties.configuration.ingress.fqdn \
+            --output tsv
