@@ -187,7 +187,7 @@ public class AccountServiceTest {
                 eq(user),
                 eq(Notification.NotificationType.DEPOSIT),
                 eq(AccountService.DEPOSIT_CONFIRMATION),
-                eq("Deposit of 100,00 EUR. New balance: 1100,00 EUR"));
+                contains(String.format("Deposit of %.2f EUR. New balance: %.2f EUR", 100.0, 1100.0)));
         verifyNoInteractions(smsService);
     }
 
@@ -207,7 +207,7 @@ public class AccountServiceTest {
                 eq(user),
                 eq(Notification.NotificationType.DEPOSIT),
                 eq(AccountService.DEPOSIT_CONFIRMATION),
-                eq("Deposit: 100,00 EUR. Balance: 1100,00 EUR"));
+                contains(String.format("Deposit: %.2f EUR. Balance: %.2f EUR", 100.0, 1100.0)));
         verifyNoInteractions(emailService);
     }
 
@@ -507,7 +507,7 @@ public class AccountServiceTest {
                 eq(user),
                 eq(Notification.NotificationType.WITHDRAWAL),
                 eq("Withdrawal Confirmation"),
-                contains("Withdrawal of 200,00 EUR. New balance: 800,00 EUR"));
+                contains(String.format("Withdrawal of %.2f EUR. New balance: %.2f EUR", 200.0, 800.0)));
         verifyNoInteractions(smsService);
     }
 
@@ -526,7 +526,7 @@ public class AccountServiceTest {
                 eq(user),
                 eq(Notification.NotificationType.WITHDRAWAL),
                 eq("Withdrawal"),
-                contains("Withdrawal of 50,00 EUR. New balance: 950,00 EUR"));
+                contains(String.format("Withdrawal of %.2f EUR. New balance: %.2f EUR", 50.0, 950.0)));
         verifyNoInteractions(emailService);
     }
 
@@ -656,12 +656,14 @@ public class AccountServiceTest {
                     eq(user),
                     eq(Notification.NotificationType.TRANSFER),
                     eq("Transfer Sent"),
-                    eq("Transfer of 500,00 EUR to ES9876543210. New balance: 500,00 EUR"));
+                    contains(String.format("Transfer of %.2f EUR to ES9876543210. New balance: %.2f EUR", 500.0,
+                            500.0)));
             verify(targetService).sendNotification(
                     eq(user2),
                     eq(Notification.NotificationType.TRANSFER),
                     eq("Transfer Received"),
-                    eq("Transfer of 500,00 EUR from ES0123456789. New balance: 1500,00 EUR"));
+                    contains(String.format("Transfer of %.2f EUR from ES0123456789. New balance: %.2f EUR", 500.0,
+                            1500.0)));
             verifyNoInteractions(targetService == emailService ? smsService : emailService);
         } else {
             verifyNoInteractions(emailService, smsService);
