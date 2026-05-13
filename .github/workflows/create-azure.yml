@@ -29,7 +29,7 @@ jobs:
           az containerapp env create \
             --name ${{ secrets.AZURE_CONTAINER_ENV }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --location ${{ secrets.AZURE_LOCATION }} || true
+            --location ${{ vars.AZURE_LOCATION }} || true
 
       - name: 'Create and deploy Container App'
         run: |
