@@ -2,6 +2,11 @@ name: Create & Deploy Azure Container App
 
 on:
   workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Etiqueta de la imagen de Docker a desplegar (ej. v1, latest)'
+        required: true
+        default: 'v1'
 
 permissions:
   id-token: write
@@ -32,7 +37,7 @@ jobs:
             --name banking-app \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --environment ${{ secrets.AZURE_CONTAINER_ENV }} \
-            --image ${{ secrets.DOCKERHUB_USERNAME }}/banking-app:latest \
+            --image ${{ secrets.DOCKERHUB_USERNAME }}/banking-app:${{ inputs.image_tag }} \
             --target-port 8080 \
             --ingress external \
             --min-replicas 1 \
